@@ -36,7 +36,9 @@ public class WebSite
         if (!RemoteUrl.EndsWith("/"))
             RemoteUrl += "/";
 
-        Widgets.Add(new EnKoppKaffeWidget());
+        Widgets.Add(new StaticHtmlFromFile(this, "kaffe.txt"));
+        Widgets.Add(new MenuWidget("Right", this, "card rightMenu"));
+        Widgets.Add(new MenuWidget("Center", this, "card centerMenu"));
     }
 
     public void Render()
@@ -45,9 +47,7 @@ public class WebSite
         var widgetPositions = GetWidgetPositions();
 
         foreach (var webPage in all)
-        {
             webPage.Render(widgetPositions);
-        }
     }
 
     public List<WebPage> GetAllPages()
@@ -63,9 +63,9 @@ public class WebSite
         return result;
     }
 
-    public WebPage CreateRootPage(string htmlFileName, string longTitle, string shortTitle)
+    public WebPage CreateRootPage(string htmlFileName, string longTitle, string shortTitle, string pageName)
     {
-        var result = new WebPage(this, "", htmlFileName, longTitle, shortTitle)
+        var result = new WebPage(this, "", htmlFileName, longTitle, shortTitle, pageName)
         {
             ParentPage = null
         };

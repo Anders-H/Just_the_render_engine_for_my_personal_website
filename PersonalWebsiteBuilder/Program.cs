@@ -7,9 +7,9 @@ var site = new WebSite(localSite, staticResources, "https://ahesselbom.se/");
 
 // Create pages
 
-var home = site.CreateRootPage("index.html", "Anders Hesselbom", "Startsidan");
-var about = home.CreateChildPage("om", "index.html", "Om Anders Hesselbom", "Om");
-
+var home = site.CreateRootPage("index.html", "Anders Hesselbom", "Startsidan", "start");
+var about = home.CreateChildPage("om", "index.html", "Om Anders Hesselbom", "Om", "om");
+var texts = site.CreateRootPage("index.html", "Texter", "Texter", "texter");
 
 // Add common elements
 

@@ -10,9 +10,10 @@ public class WebPage
     public string HtmlFileName { get; internal set; }
     public string LongTitle { get; internal set; }
     public string ShortTitle { get; internal set; }
+    public string PageName { get; }
     public WebPage? ParentPage { get; set; }
 
-    internal WebPage(WebSite webSite, string webFolderName, string htmlFileName, string longTitle, string shortTitle)
+    internal WebPage(WebSite webSite, string webFolderName, string htmlFileName, string longTitle, string shortTitle, string pageName)
     {
         _childPages = new List<WebPage>();
         _webSite = webSite;
@@ -20,6 +21,7 @@ public class WebPage
         HtmlFileName = htmlFileName;
         LongTitle = longTitle;
         ShortTitle = shortTitle;
+        PageName = pageName;
     }
 
     internal void Render(List<string> widgetPositions)
@@ -40,7 +42,7 @@ public class WebPage
             var s = new StringBuilder();
 
             foreach (var widget in widgets)
-                s.Append(widget.Render());
+                s.Append(widget.Render(this));
 
             html = html.Replace($"{{Widgets:{widgetPosition}}}", s.ToString());
         }
@@ -102,9 +104,9 @@ public class WebPage
         return result;
     }
 
-    public WebPage CreateChildPage(string webFolderName, string htmlFileName, string longTitle, string shortTitle)
+    public WebPage CreateChildPage(string webFolderName, string htmlFileName, string longTitle, string shortTitle, string pageName)
     {
-        var result = new WebPage(_webSite, webFolderName, htmlFileName, longTitle, shortTitle)
+        var result = new WebPage(_webSite, webFolderName, htmlFileName, longTitle, shortTitle, pageName)
         {
             ParentPage = this
         };
