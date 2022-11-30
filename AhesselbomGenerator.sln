@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31605.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AhesselbomGenerator", "AhesselbomGenerator\AhesselbomGenerator.csproj", "{40208F6F-ADFB-4273-B56A-D73E17F6EE1B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40208F6F-ADFB-4273-B56A-D73E17F6EE1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40208F6F-ADFB-4273-B56A-D73E17F6EE1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40208F6F-ADFB-4273-B56A-D73E17F6EE1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40208F6F-ADFB-4273-B56A-D73E17F6EE1B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {931DFB2A-C604-4726-955C-5AAE9CB30568}
+	EndGlobalSection
+EndGlobal
