@@ -27,6 +27,7 @@ public class BloggGenerator
     private string GenerateFull()
     {
         var dom = new XmlDocument();
+
         if (_filename.StartsWith("http"))
         {
             FileReader.DownloadTextFile(_filename, _temp);
@@ -36,17 +37,26 @@ public class BloggGenerator
         {
             dom.Load(_filename);
         }
+
         var rss = dom.DocumentElement;
+        
         if (rss == null)
             throw new Exception();
+        
         var channel = (XmlElement)rss.SelectSingleNode("channel");
+        
         if (channel == null)
             throw new Exception();
+        
         var items = channel.SelectNodes("item");
+        
         if (items == null)
             throw new Exception();
+        
         var count = 0;
+        
         var s = new StringBuilder();
+        
         foreach (XmlElement item in items)
         {
             if (count >= 50)
@@ -66,12 +76,14 @@ public class BloggGenerator
             s.AppendLine($"<p>{text}</p>");
             count++;
         }
+
         return s.ToString().Replace("<br /><br />", "<br />");
     }
 
     private string GenerateHeadersList()
     {
         var dom = new XmlDocument();
+
         if (_filename.StartsWith("http"))
         {
             FileReader.DownloadTextFile(_filename, _temp);
@@ -81,28 +93,41 @@ public class BloggGenerator
         {
             dom.Load(_filename);
         }
+
         var rss = dom.DocumentElement;
+        
         if (rss == null)
             throw new Exception();
+        
         var channel = (XmlElement)rss.SelectSingleNode("channel");
+        
         if (channel == null)
             throw new Exception();
+        
         var items = channel.SelectNodes("item");
+        
         if (items == null)
             throw new Exception();
+        
         var count = 0;
+        
         var s = new StringBuilder();
+        
         var added = false;
+        
         foreach (XmlElement item in items)
         {
             if (count >= 100)
                 break;
+
             if (added)
                 s.Append("<br />");
+
             s.AppendLine($@"<a href=""{item.SelectSingleNode("link")?.InnerText ?? ""}"" target=""_blank"">{item.SelectSingleNode("title")?.InnerText ?? ""}</a>");
             added = true;
             count++;
         }
+
         return s.ToString();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -146,8 +147,12 @@ public class HtmlProcessor
             var bloggGenerator = new BloggGenerator(row.ExtractValue());
             return bloggGenerator.Generate(false);
         }
-            
 
+        if (row.StartsWith("<!--PodcastEpisodes:"))
+        {
+            var podcastEpisodeListGenerator = new PodcastEpisodeListGenerator(row.ExtractValue());
+            return podcastEpisodeListGenerator.Generate();
+        }
 
         if (row == "<!--Generator-->")
         {
