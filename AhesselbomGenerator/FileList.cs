@@ -9,6 +9,7 @@ public class FileList : List<FileInfo>
     public void LoadFromPath(string path)
     {
         Clear();
+
         var d = new DirectoryInfo(path);
 
         if (d.Exists)
@@ -22,6 +23,7 @@ public class FileList : List<FileInfo>
         {
             foreach (var f in p.GetFiles())
                 Add(f);
+
             foreach (var dir in p.GetDirectories())
                 Scan(dir);
         }

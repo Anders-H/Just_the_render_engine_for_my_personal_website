@@ -17,8 +17,11 @@ public class LinkList : List<Link>
     public void Load()
     {
         Clear();
+
         var raw = FileReader.GetTextFileContent(_sourceFilename);
+        
         var rows = Regex.Split(raw, @"\n");
+        
         foreach (var row in rows)
         {
             var x = Link.Parse(row);
@@ -30,12 +33,15 @@ public class LinkList : List<Link>
     public string GenerateLinks()
     {
         var s = new StringBuilder();
+        
         foreach (var link in this)
         {
             s.AppendLine(link.GenerateLink());
+            
             if (link != this.Last())
                 s.Append("<br />");
         }
+        
         return s.ToString();
     }
 }

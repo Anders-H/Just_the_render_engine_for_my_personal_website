@@ -16,6 +16,7 @@ public class YouTubeListGenerator
     public string Generate()
     {
         var s = new StringBuilder();
+
         var rows = Regex.Split(FileReader.GetTextFileContent(_filename), @"\n");
         s.AppendLine(@"<table border=""0"" cellspacing=""0"" cellpadding=""0"">");
         var eachother = false;
@@ -37,7 +38,9 @@ public class YouTubeListGenerator
             s.Append($@"<td class=""ytlink {(eachother ? "r1" : "r2")}""><a href=""https://www.youtube.com/watch?v={parts[0]}"" target=""_blank"">{parts[1]}</a></td>");
             s.Append("</tr>");
         }
+
         s.Append("</table>");
+
         return s.ToString();
     }
 }

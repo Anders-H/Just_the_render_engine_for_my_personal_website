@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using MutableStringLibrary;
 
@@ -48,6 +47,6 @@ public class MenuProcessor
         && s.Value.Count(x => x == ':') == 2;
 
     private static bool ParentNameIs(MutableString s, string parent) =>
-        (s.Value ?? "").IndexOf($"<<{parent}:", StringComparison.Ordinal) >= 0
-        || (s.Value ?? "").IndexOf($"<<{parent}>>:", StringComparison.Ordinal) >= 0;
+        (s.Value ?? "").Contains($"<<{parent}:")
+        || (s.Value ?? "").Contains($"<<{parent}>>:");
 }

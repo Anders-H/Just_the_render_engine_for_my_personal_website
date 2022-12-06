@@ -22,6 +22,7 @@ public class PodcastEpisodeListGenerator
     public string Generate()
     {
         var dom = new XmlDocument();
+
         if (_filename.StartsWith("http"))
         {
             FileReader.DownloadTextFile(_filename, _temp);
@@ -54,9 +55,10 @@ public class PodcastEpisodeListGenerator
         foreach (XmlElement item in items)
         {
             s.Append("<p>");
-            s.Append($"<b>Avsnitt {avsnitt}: {item.SelectSingleNode("title").InnerText}</b>");
-            s.Append("<br />");
+            s.Append($"<b>Avsnitt {avsnitt}: {item.SelectSingleNode("title").InnerText}</b><br />");
+
             var mp3 = item!.SelectSingleNode("enclosure")!.Attributes!.GetNamedItem("url")!.Value;
+            
             s.Append($@"<a href=""{mp3}"" target=""_blank"">Lyssna ({mp3})</a>");
             s.Append("</p>");
 

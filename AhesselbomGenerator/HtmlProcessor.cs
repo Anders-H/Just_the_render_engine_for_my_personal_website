@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Design;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -21,11 +20,15 @@ public class HtmlProcessor
     {
         var source = FileReader.GetTextFileContent(Source);
         var rows = Regex.Split(source, @"\n");
+        
         var o = new StringBuilder();
+
         foreach (var row in rows)
             o.AppendLine(row.Trim().StartsWith("<!--") ? ProcessRow(row) : row);
+        
         if (string.IsNullOrWhiteSpace(Destination))
             throw new Exception("Missing destination.");
+        
         Save(o.ToString());
     }
 
@@ -62,7 +65,7 @@ public class HtmlProcessor
             var videoId = row.ExtractValue();
             return $@"
 <div style=""width: 420px; height: 305px;"">
-   <iframe src=""https://www.youtube.com/embed/{videoId}?controls=0&showinfo=0&autoplay=0&loop=0&mute=0"" frameborder=""0"" style=""width: 420px; height: 290px;"" allowfullscreen></iframe>
+<iframe src=""https://www.youtube.com/embed/{videoId}?controls=0&showinfo=0&autoplay=0&loop=0&mute=0"" frameborder=""0"" style=""width: 420px; height: 290px;"" allowfullscreen></iframe>
 </div>";
         }
             
@@ -126,45 +129,29 @@ public class HtmlProcessor
         }
             
         if (row.StartsWith("<!--YouTubeList:"))
-        {
-            var youTubeListGenerator = new YouTubeListGenerator(row.ExtractValue());
-            return youTubeListGenerator.Generate();
-        }
+            return new YouTubeListGenerator(row.ExtractValue()).Generate();
             
         if (row.StartsWith("<!--BloggRss:"))
-        {
-            var bloggGenerator = new BloggGenerator(row.ExtractValue());
-            return bloggGenerator.Generate(true);
-        }
+            return new BloggGenerator(row.ExtractValue()).Generate(true);
             
         if (row.StartsWith("<!--StaticLink:"))
-        {
             return FileReader.GetTextFileContent(row.ExtractValue());
-        }
             
         if (row.StartsWith("<!--BloggRssHeaders:"))
-        {
-            var bloggGenerator = new BloggGenerator(row.ExtractValue());
-            return bloggGenerator.Generate(false);
-        }
+            return new BloggGenerator(row.ExtractValue()).Generate(false);
 
         if (row.StartsWith("<!--PodcastEpisodes:"))
-        {
-            var podcastEpisodeListGenerator = new PodcastEpisodeListGenerator(row.ExtractValue());
-            return podcastEpisodeListGenerator.Generate();
-        }
+            return new PodcastEpisodeListGenerator(row.ExtractValue()).Generate();
 
         if (row == "<!--Generator-->")
-        {
             return $"<!-- Generator: Monkeybone @ {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} - Written in 2014 by Anders Hesselbom -->";
-        }
             
         if (row.StartsWith("<!--Menu:"))
         {
             var v = row.ExtractValue();
             var result = FileReader.GetTextFileContent(Path.Combine(s, "menu.txt"));
 
-            if (v.IndexOf(':') >= 0)
+            if (v.Contains(':'))
             {
                 // Vi har hittat en submeny. Behåll förälderns submenyer.
 
@@ -190,7 +177,6 @@ public class HtmlProcessor
             
         if (row.StartsWith("<!--Menu-->"))
         {
-            var v = row.ExtractValue();
             var result = FileReader.GetTextFileContent(Path.Combine(s, "menu.txt"));
             result = new MenuProcessor(result).RemoveSubmenus();
             result = Regex.Replace(result, "<<[A-Za-z]*>>", "");
@@ -198,9 +184,7 @@ public class HtmlProcessor
         }
             
         if (row.StartsWith("<!--Include:"))
-        {
             return FileReader.GetTextFileContent(Path.Combine(s, row.ExtractValue()));
-        }
             
         if (row.StartsWith("<!--LinkList:"))
         {
@@ -210,10 +194,7 @@ public class HtmlProcessor
         }
             
         if (row.StartsWith("<!--Twitter"))
-        {
-            var twitterGenerator = new TwitterGenerator();
-            return twitterGenerator.Generate();
-        }
+            return new TwitterGenerator().Generate();
             
         if (row.StartsWith("<!--Head:"))
         {
@@ -224,7 +205,7 @@ public class HtmlProcessor
             return headGenerator.Generate(x[2]);
         }
 
-        throw new Exception(row);
+        throw new SystemException(row);
     }
 
     private void Save(string content)
@@ -237,14 +218,13 @@ public class HtmlProcessor
         {
             if (string.IsNullOrWhiteSpace(c))
                 continue;
+
             s.AppendLine(c.TrimEnd());
         }
 
-        using (var sw = new StreamWriter(Destination, false, Encoding.UTF8))
-        {
-            sw.Write(s.ToString());
-            sw.Flush();
-            sw.Close();
-        }
+        using var sw = new StreamWriter(Destination, false, Encoding.UTF8);
+        sw.Write(s.ToString());
+        sw.Flush();
+        sw.Close();
     }
 }
