@@ -2,6 +2,8 @@
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using AhesselbomGenerator.HallOfFame;
+using Microsoft.VisualBasic;
 
 namespace AhesselbomGenerator;
 
@@ -48,12 +50,19 @@ public class HtmlProcessor
         if (!row.StartsWith("<!--"))
             return row;
 
+        if (row.StartsWith("<!--HallOfFame:"))
+        {
+            var values = row.ExtractValues();
+            new HallOfFameGenerator(values.Item1, values.Item2).Generate();
+            return "";
+        }
+
         if (row.StartsWith("<!--Output:"))
         {
             Destination = Path.Combine(d, row.ExtractValue());
             return "";
         }
-            
+
         if (row.StartsWith("<!--Upload:"))
         {
             Upload = row.ExtractValue();
@@ -133,7 +142,7 @@ public class HtmlProcessor
             
         if (row.StartsWith("<!--BloggRss:"))
             return new BloggGenerator(row.ExtractValue()).Generate(true);
-            
+
         if (row.StartsWith("<!--StaticLink:"))
             return FileReader.GetTextFileContent(row.ExtractValue());
             
@@ -143,9 +152,6 @@ public class HtmlProcessor
         if (row.StartsWith("<!--PodcastEpisodes:"))
             return new PodcastEpisodeListGenerator(row.ExtractValue()).Generate();
 
-        if (row == "<!--Generator-->")
-            return $"<!-- Generator: Monkeybone @ {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} - Written in 2014 by Anders Hesselbom -->";
-            
         if (row.StartsWith("<!--Menu:"))
         {
             var v = row.ExtractValue();

@@ -21,4 +21,23 @@ public static class Extensions
             
         return result;
     }
+
+    public static (string, string) ExtractValues(this string row)
+    {
+        var parts = row.Split(':');
+
+        parts[2] = parts[2].Substring(0, parts[2].Length - 3);
+
+        if (parts[1].IndexOf("[PATH]", StringComparison.Ordinal) <= -1 && parts[2].IndexOf("[PATH]", StringComparison.Ordinal) <= -1)
+            return (parts[1], parts[2]);
+
+        var s = Config.SourceDirectory;
+
+        if (!s.EndsWith("/"))
+            s += "/";
+
+        parts[1] = parts[1].Replace("[PATH]", s);
+        parts[2] = parts[2].Replace("[PATH]", s);
+        return (parts[1], parts[2]);
+    }
 }
