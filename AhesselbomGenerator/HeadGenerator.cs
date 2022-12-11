@@ -4,7 +4,7 @@ namespace AhesselbomGenerator;
 
 public class HeadGenerator
 {
-    private int _folderDepth;
+    private readonly int _folderDepth;
 
     public HeadGenerator(int folderDepth)
     {

@@ -25,9 +25,7 @@ public class TwitterGenerator
         if (rss == null)
             throw new Exception();
 
-        var channel = (XmlElement)rss.SelectSingleNode("channel");
-
-        if (channel == null)
+        if (rss.SelectSingleNode("channel") is not XmlElement channel)
             throw new Exception();
 
         var items = channel.SelectNodes("item");

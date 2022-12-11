@@ -2,6 +2,12 @@
 
 internal class Quote
 {
-    public string QuoteText { get; set; }
-    public string Url { get; set; }
+    public string QuoteText { get; }
+    public string Url { get; }
+
+    public Quote(string quoteText, string url)
+    {
+        QuoteText = quoteText;
+        Url = url;
+    }
 }

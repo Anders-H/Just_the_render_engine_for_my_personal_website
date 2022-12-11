@@ -3,7 +3,6 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using AhesselbomGenerator.HallOfFame;
-using Microsoft.VisualBasic;
 
 namespace AhesselbomGenerator;
 
@@ -16,6 +15,8 @@ public class HtmlProcessor
     public HtmlProcessor(string source)
     {
         Source = source;
+        Destination = "";
+        Upload = "";
     }
 
     public void Process()

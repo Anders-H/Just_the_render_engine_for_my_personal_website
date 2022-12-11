@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Xml;
+using AhesselbomGenerator.Xml;
 
 namespace AhesselbomGenerator;
 
@@ -42,10 +43,8 @@ public class BloggGenerator
         
         if (rss == null)
             throw new Exception();
-        
-        var channel = (XmlElement)rss.SelectSingleNode("channel");
-        
-        if (channel == null)
+
+        if (rss.SelectNode("channel") is not XmlElement channel)
             throw new Exception();
         
         var items = channel.SelectNodes("item");
@@ -98,10 +97,8 @@ public class BloggGenerator
         
         if (rss == null)
             throw new Exception();
-        
-        var channel = (XmlElement)rss.SelectSingleNode("channel");
-        
-        if (channel == null)
+
+        if (rss.SelectSingleNode("channel") is not XmlElement channel)
             throw new Exception();
         
         var items = channel.SelectNodes("item");

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Xml;
+using AhesselbomGenerator.Xml;
 
 namespace AhesselbomGenerator.HallOfFame;
 
@@ -20,34 +21,29 @@ internal class HallOfFameEntryList : List<HallOfFameEntry>
         if (dom.DocumentElement == null)
             return;
 
-        foreach (XmlNode xEntry in dom.DocumentElement)
+        foreach (XmlNode x in dom.DocumentElement)
         {
-            var xCredit = xEntry.SelectSingleNode("imagecredit");
-            var xCreditUrl = xCredit?.Attributes?.GetNamedItem("url");
+            var xCredit = x.SelectNode("imagecredit");
+            var xCreditUrl = xCredit.GetAttributeValue("url");
             
             var entry = new HallOfFameEntry(
-                xEntry.SelectSingleNode("name")?.InnerText ?? "",
-                xEntry.SelectSingleNode("cv")?.InnerText ?? "",
-                xEntry.SelectSingleNode("image")?.InnerText ?? "",
+                x.GetText("name"),
+                x.GetText("cv"),
+                x.GetText("image"),
                 xCredit?.InnerText ?? "",
-                xCreditUrl?.Value,
-                xEntry.SelectSingleNode("page")?.InnerText ?? ""
+                xCreditUrl,
+                x.GetText("page")
             );
             
             Add(entry);
             
-            var quoteList = xEntry.SelectSingleNode("quotes")?.SelectNodes("quote");
+            var quoteList = x.SelectNode("quotes")?.SelectNodes("quote");
             
             if (quoteList == null)
                 continue;
             
             foreach (XmlNode xQuote in quoteList)
-            {
-                var quote = new Quote { QuoteText = xQuote.InnerText };
-                var sourceUrl = xQuote.Attributes?.GetNamedItem("url");
-                quote.Url = sourceUrl?.Value ?? "";
-                entry.Quotes.Add(quote);
-            }
+                entry.Quotes.Add(new Quote(xQuote.InnerText, xQuote.GetAttributeValue("url")));
         }
     }
 }

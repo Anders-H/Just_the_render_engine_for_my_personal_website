@@ -8,14 +8,14 @@ public class Link
     public string ClickableText { get; }
     public string ExtraText { get; }
 
-    private Link(string url, string clickableText, string extraText)
+    private Link(string? url, string? clickableText, string? extraText)
     {
         Url = (url ?? "").Trim();
         ClickableText = (clickableText ?? "").Trim();
         ExtraText = (extraText ?? "").Trim();
     }
 
-    public static Link Parse(string raw)
+    public static Link? Parse(string? raw)
     {
         raw = (raw ?? "").Trim();
         
