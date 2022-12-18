@@ -11,7 +11,7 @@ public class HeadGenerator
         _folderDepth = folderDepth;
     }
 
-    public string Generate(string title)
+    public string Generate(string title, string css)
     {
         var level = "./";
 
@@ -31,7 +31,7 @@ public class HeadGenerator
 <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
 <meta charset=""utf-8"" />
 <title>{title}</title>
-<link rel=""stylesheet"" href=""{level}style25.css"">
+<link rel=""stylesheet"" href=""{level}{css}"">
 <script src=""{level}today.js""></script>
 </head>";
     }

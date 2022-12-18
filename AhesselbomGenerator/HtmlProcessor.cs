@@ -189,7 +189,13 @@ public class HtmlProcessor
             result = Regex.Replace(result, "<<[A-Za-z]*>>", "");
             return result;
         }
-            
+
+        if (row.StartsWith("<!--Menu26:"))
+            return new StaticMenuProcessor(row.ExtractValue()).Generate();
+
+        if (row.StartsWith("<!--Menu26-->"))
+            return new StaticMenuProcessor("").Generate();
+
         if (row.StartsWith("<!--Include:"))
             return FileReader.GetTextFileContent(Path.Combine(s, row.ExtractValue()));
             
@@ -209,7 +215,16 @@ public class HtmlProcessor
             x[2] = x[2].Replace("-->", "");
 
             var headGenerator = new HeadGenerator(int.Parse(x[1]));
-            return headGenerator.Generate(x[2]);
+            return headGenerator.Generate(x[2], "style25.css");
+        }
+
+        if (row.StartsWith("<!--Head26:"))
+        {
+            var x = row.Split(':');
+            x[2] = x[2].Replace("-->", "");
+
+            var headGenerator = new HeadGenerator(int.Parse(x[1]));
+            return headGenerator.Generate(x[2], "style26.css");
         }
 
         throw new SystemException(row);
