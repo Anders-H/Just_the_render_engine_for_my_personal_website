@@ -12,9 +12,7 @@ public class FileList : List<FileInfo>
 
         var d = new DirectoryInfo(path);
 
-        if (d.Exists)
-            Console.WriteLine("Using primary source path.");
-        else
+        if (!d.Exists)
             throw new SystemException();
             
         Scan(d);
