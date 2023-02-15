@@ -10,6 +10,7 @@ public class BloggGenerator
 {
     private readonly string _filename;
     private readonly string _temp;
+    private readonly int _max;
 
     public BloggGenerator(string filename)
     {
@@ -18,6 +19,19 @@ public class BloggGenerator
             : Path.Combine(Config.SourceDirectory, filename);
 
         _temp = Path.Combine(Path.GetTempPath(), "temp.xml");
+
+        _max = int.MaxValue;
+    }
+
+    public BloggGenerator(string filename, int max)
+    {
+        _filename = filename.StartsWith("http")
+            ? filename
+            : Path.Combine(Config.SourceDirectory, filename);
+
+        _temp = Path.Combine(Path.GetTempPath(), "temp.xml");
+
+        _max = max;
     }
 
     public string Generate(bool full) =>
@@ -25,7 +39,12 @@ public class BloggGenerator
             ? GenerateFull()
             : GenerateHeadersList();
 
-    private string GenerateFull()
+    public string Generate(bool full, int skip) =>
+        full
+            ? GenerateFull(skip)
+            : GenerateHeadersList(skip);
+
+    private string GenerateFull(int skip = 0)
     {
         var dom = new XmlDocument();
 
@@ -58,13 +77,21 @@ public class BloggGenerator
         
         foreach (XmlElement item in items)
         {
-            if (count >= 50)
+            if (skip > 0 && count < skip)
+            {
+                count++;
+                continue;
+            }
+
+            if (count >= _max + skip)
                 break;
 
-            var link = item.SelectSingleNode("link")?.InnerText ?? "";
-            var header = (item.SelectSingleNode("title")?.InnerText ?? "").ToUpper();
+            count++;
 
-            s.AppendLine($@"<p><b><a href=""{link}"" target=""_blank"">*** {header} ***</a></b></p>");
+            var link = item.SelectSingleNode("link")?.InnerText ?? "";
+            var header = item.SelectSingleNode("title")?.InnerText ?? "";
+
+            s.AppendLine($@"<p><b><a href=""{link}"">{header}</a></b></p>");
             var text = item.SelectSingleNode("description")?.InnerText ?? "";
             text = text.Replace("<br />", "<br /><br />");
             text = text.Replace("<br /><br /><br /><br />", "<br /><br />");
@@ -73,13 +100,12 @@ public class BloggGenerator
             text = text.Replace("<br /><br /><blockquote", "<br /><blockquote");
             text = text.Replace("</i><br /><br /><i><br /><br /></i>", "</i><br /><br />");
             s.AppendLine($"<p>{text}</p>");
-            count++;
         }
 
         return s.ToString().Replace("<br /><br />", "<br />");
     }
 
-    private string GenerateHeadersList()
+    private string GenerateHeadersList(int skip = 0)
     {
         var dom = new XmlDocument();
 
@@ -114,15 +140,22 @@ public class BloggGenerator
         
         foreach (XmlElement item in items)
         {
-            if (count >= 100)
+            if (skip > 0 && count < skip)
+            {
+                count++;
+                continue;
+            }
+
+            if (count >= _max + skip)
                 break;
+
+            count++;
 
             if (added)
                 s.Append("<br />");
 
-            s.AppendLine($@"<a href=""{item.SelectSingleNode("link")?.InnerText ?? ""}"" target=""_blank"">{item.SelectSingleNode("title")?.InnerText ?? ""}</a>");
+            s.AppendLine($@"<a href=""{item.SelectSingleNode("link")?.InnerText ?? ""}"">{item.SelectSingleNode("title")?.InnerText ?? ""}</a>");
             added = true;
-            count++;
         }
 
         return s.ToString();

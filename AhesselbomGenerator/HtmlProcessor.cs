@@ -144,11 +144,17 @@ public class HtmlProcessor
         if (row.StartsWith("<!--BloggRss:"))
             return new BloggGenerator(row.ExtractValue()).Generate(true);
 
+        if (row.StartsWith("<!--BloggRssTake5:"))
+            return new BloggGenerator(row.ExtractValue(), 5).Generate(true);
+
         if (row.StartsWith("<!--StaticLink:"))
             return FileReader.GetTextFileContent(row.ExtractValue());
             
         if (row.StartsWith("<!--BloggRssHeaders:"))
             return new BloggGenerator(row.ExtractValue()).Generate(false);
+
+        if (row.StartsWith("<!--BloggRssHeadersSkip5:"))
+            return new BloggGenerator(row.ExtractValue(), 5).Generate(false, 5);
 
         if (row.StartsWith("<!--PodcastEpisodes:"))
             return new PodcastEpisodeListGenerator(row.ExtractValue()).Generate();
@@ -205,10 +211,7 @@ public class HtmlProcessor
             linkList.Load();
             return linkList.GenerateLinks();
         }
-            
-        if (row.StartsWith("<!--Twitter"))
-            return new TwitterGenerator().Generate();
-            
+        
         if (row.StartsWith("<!--Head:"))
         {
             var x = row.Split(':');
