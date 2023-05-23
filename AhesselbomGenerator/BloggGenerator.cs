@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using AhesselbomGenerator.Xml;
 
@@ -58,19 +59,8 @@ public class BloggGenerator
             dom.Load(_filename);
         }
 
-        var rss = dom.DocumentElement;
-        
-        if (rss == null)
-            throw new Exception();
+        var items = dom.GetItemsOrThrow();
 
-        if (rss.SelectNode("channel") is not XmlElement channel)
-            throw new Exception();
-        
-        var items = channel.SelectNodes("item");
-        
-        if (items == null)
-            throw new Exception();
-        
         var count = 0;
         
         var s = new StringBuilder();
@@ -90,8 +80,10 @@ public class BloggGenerator
 
             var link = item.SelectSingleNode("link")?.InnerText ?? "";
             var header = item.SelectSingleNode("title")?.InnerText ?? "";
+            var dateString = ToDateString(item.SelectSingleNode("pubDate")?.InnerText);
+            dateString = string.IsNullOrEmpty(dateString) ? "" : $@"<br /><i>{dateString}</i>";
 
-            s.AppendLine($@"<p><b><a href=""{link}"">{header}</a></b></p>");
+            s.AppendLine($@"<p><b><a href=""{link}"">{header}</a></b>{dateString}</p>");
             var text = item.SelectSingleNode("description")?.InnerText ?? "";
             text = text.Replace("<br />", "<br /><br />");
             text = text.Replace("<br /><br /><br /><br />", "<br /><br />");
@@ -154,10 +146,51 @@ public class BloggGenerator
             if (added)
                 s.Append("<br />");
 
-            s.AppendLine($@"<a href=""{item.SelectSingleNode("link")?.InnerText ?? ""}"">{item.SelectSingleNode("title")?.InnerText ?? ""}</a>");
+            var dateString = ToDateString(item.SelectSingleNode("pubDate")?.InnerText);
+            dateString = string.IsNullOrEmpty(dateString) ? "" : $@" ({dateString})";
+
+            s.AppendLine($@"<a href=""{item.SelectSingleNode("link")?.InnerText ?? ""}"">{item.SelectSingleNode("title")?.InnerText ?? ""}</a>{dateString}");
             added = true;
         }
 
         return s.ToString();
+    }
+
+    public static string ToDateString(string? feedDate)
+    {
+        if (string.IsNullOrWhiteSpace(feedDate))
+            return "";
+
+        var hit = Regex.Match(feedDate, @"([0-9]+)\s([A-Z][a-z]+)\s(20[0-9][0-9])", RegexOptions.IgnorePatternWhitespace);
+        
+        if (!hit.Success)
+            return "";
+
+        try
+        {
+            var date = int.Parse(hit.Groups[1].Value);
+            var month = hit.Groups[2].Value switch
+            {
+                "Jan" => 1,
+                "Feb" => 2,
+                "Mar" => 3,
+                "Apr" => 4,
+                "May" => 5,
+                "Jun" => 6,
+                "Jul" => 7,
+                "Aug" => 8,
+                "Sep" => 9,
+                "Oct" => 10,
+                "Nov" => 11,
+                "Dec" => 12,
+                _ => throw new SystemException("Nothing works here...")
+            };
+            var year = int.Parse(hit.Groups[3].Value);
+            return new DateTime(year, month, date).ToShortDateString();
+        }
+        catch
+        {
+            return "";
+        }
     }
 }

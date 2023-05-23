@@ -82,16 +82,16 @@ public class HtmlProcessor
         if (row.StartsWith("<!--LocalInstagram:"))
         {
             var x = row.ExtractValue();
-            return $@"<p style=""text-align: center;"">
-<a href=""https://www.instagram.com/p/{x}/"" target=""_blank""><img src=""{x}.jpg"" style=""width: 576px; height: 576px;"" /></a>
+            return $@"<p class=""instaParagraph"">
+<a href=""https://www.instagram.com/p/{x}/"" target=""_blank""><img src=""{x}.jpg"" class=""instaImage"" /></a>
 </p>";
         }
             
         if (row.StartsWith("<!--LocalYouTube:"))
         {
             var x = row.ExtractValue();
-            return $@"<p style=""text-align: center;"">
-<a href=""https://www.youtube.com/watch?v={x}"" target=""_blank""><img src=""{x}.jpg"" style=""width: 576px; height: 324px;"" /></a>
+            return $@"<p class=""instaParagraph"">
+<a href=""https://www.youtube.com/watch?v={x}"" target=""_blank""><img src=""{x}.jpg"" style="""" /></a>
 </p>";
         }
             

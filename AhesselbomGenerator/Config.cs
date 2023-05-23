@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace AhesselbomGenerator;
+﻿namespace AhesselbomGenerator;
 
 public class Config
 {

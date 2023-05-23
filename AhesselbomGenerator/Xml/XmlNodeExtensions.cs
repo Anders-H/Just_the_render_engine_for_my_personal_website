@@ -1,4 +1,6 @@
-﻿using System.Xml;
+﻿using System.Security.Cryptography;
+using System;
+using System.Xml;
 
 namespace AhesselbomGenerator.Xml;
 
@@ -12,4 +14,19 @@ public static class XmlNodeExtensions
 
     public static string GetAttributeValue(this XmlNode? me, string name) =>
         me?.Attributes?.GetNamedItem(name)?.Value ?? "";
+
+    public static XmlNodeList GetItemsOrThrow(this XmlDocument me)
+    {
+        var rss = me.DocumentElement;
+
+        if (rss == null)
+            throw new Exception();
+
+        if (rss.SelectNode("channel") is not XmlElement channel)
+            throw new Exception();
+
+        var items = channel.SelectNodes("item");
+
+        return items ?? throw new Exception();
+    }
 }
