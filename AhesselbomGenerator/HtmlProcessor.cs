@@ -116,6 +116,9 @@ public class HtmlProcessor
         if (row.StartsWith("<!--PodcastEpisodes:"))
             return new PodcastEpisodeListGenerator(row.ExtractValue()).Generate();
 
+        if (row.StartsWith("<!--Breadcrumb:"))
+            return new BreadcrumbGenerator(row.ExtractValue()).Generate();
+
         if (row.StartsWith("<!--Menu:"))
         {
             var v = row.ExtractValue();

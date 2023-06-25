@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using System;
+﻿using System;
 using System.Xml;
 
 namespace AhesselbomGenerator.Xml;
