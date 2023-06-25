@@ -28,7 +28,7 @@ public class HallOfFameGenerator
             x.WriteLine();
 
             if (l.First() != item)
-                x.WriteLine("<p></br /></p>");
+                x.WriteLine("<p><br /></p>");
 
             x.Write($@"<p style=""text-align: center; text-transform: uppercase;""><b>{HttpUtility.HtmlEncode(item.Name)}</b></p>");
 
