@@ -26,7 +26,7 @@ public static class Extensions
     {
         var parts = row.Split(':');
 
-        parts[2] = parts[2].Substring(0, parts[2].Length - 3);
+        parts[2] = parts[2][..^3];
 
         if (parts[1].IndexOf("[PATH]", StringComparison.Ordinal) <= -1 && parts[2].IndexOf("[PATH]", StringComparison.Ordinal) <= -1)
             return (parts[1], parts[2]);

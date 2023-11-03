@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using AhesselbomGenerator.HallOfFame;
+using AhesselbomGenerator.LinkManagement;
 
 namespace AhesselbomGenerator;
 
@@ -32,7 +33,9 @@ public class HtmlProcessor
         if (string.IsNullOrWhiteSpace(Destination))
             throw new Exception("Missing destination.");
         
-        Save(o.ToString());
+        var generated = o.ToString();
+
+        Save(generated);
     }
 
     private string ProcessRow(string row)
@@ -181,13 +184,17 @@ public class HtmlProcessor
             return headGenerator.Generate(x[2], "style25.css");
         }
 
-        if (row.StartsWith("<!--Head26:"))
+        if (row.StartsWith("<!--GenerationDate"))
         {
-            var x = row.Split(':');
-            x[2] = x[2].Replace("-->", "");
+            var n = DateTime.Now;
+            var date = $@"{n:yyyy:MM:dd} {n:hh:mm}";
+            return $@"<!-- Generated using the third generation of the Monkeybone engine at {date}. -->";
+        }
 
-            var headGenerator = new HeadGenerator(int.Parse(x[1]));
-            return headGenerator.Generate(x[2], "style26.css");
+        if (row.StartsWith("<!--Has:"))
+        {
+            var value = row.ExtractValue();
+            return $@"<!-- This row has: {value} -->";
         }
 
         throw new SystemException(row);
@@ -207,8 +214,14 @@ public class HtmlProcessor
             s.AppendLine(c.TrimEnd());
         }
 
+        var html = s.ToString();
+
+        if (html.IndexOf("ooooo", StringComparison.Ordinal) > 0)
+            Console.WriteLine(html);
+
         using var sw = new StreamWriter(Destination, false, Encoding.UTF8);
-        sw.Write(s.ToString());
+        sw.Write(html);
+        sw.Write("WHAT IS THIS!!!!");
         sw.Flush();
         sw.Close();
     }
