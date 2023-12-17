@@ -1,16 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.Xml.Linq;
+using AhesselbomGenerator.LinkManagement;
 using AhesselbomGenerator.Xml;
 
-namespace AhesselbomGenerator;
+namespace AhesselbomGenerator.Blogg;
 
 public class BloggGenerator
 {
     private readonly string _filename;
     private readonly string _temp;
+    private readonly string _tempComment;
     private readonly int _max;
 
     public BloggGenerator(string filename)
@@ -20,7 +25,7 @@ public class BloggGenerator
             : Path.Combine(Config.SourceDirectory, filename);
 
         _temp = Path.Combine(Path.GetTempPath(), "temp.xml");
-
+        _tempComment = Path.Combine(Path.GetTempPath(), "tempComment.xml");
         _max = int.MaxValue;
     }
 
@@ -48,23 +53,56 @@ public class BloggGenerator
     private string GenerateFull(int skip = 0)
     {
         var dom = new XmlDocument();
+        var filename = _filename;
+        var comments = new CommentList();
 
-        if (_filename.StartsWith("http"))
+        // Check if a comment feed is provided.
+        if (filename.IndexOf('|') > -1)
         {
-            FileReader.DownloadTextFile(_filename, _temp);
+            var temp = filename.Split('|');
+            filename = temp[0];
+
+            // Load the comment feed.
+            var commentsDom = new XmlDocument();
+
+            if (temp[1].StartsWith("http"))
+            {
+                FileReader.DownloadTextFile(temp[1], _tempComment);
+                commentsDom.Load(_tempComment);
+            }
+            else
+            {
+                commentsDom.Load(temp[1]);
+            }
+
+            // Add comments to the list.
+            var commentItems = commentsDom.DocumentElement?.SelectSingleNode("channel")?.SelectNodes("item");
+
+            if (commentItems is { Count: > 0 })
+            {
+                comments.AddRange(
+                    from XmlElement commentItem in commentItems
+                    select new Comment(commentItem)
+                );
+            }
+        }
+
+        if (filename.StartsWith("http"))
+        {
+            FileReader.DownloadTextFile(filename, _temp);
             dom.Load(_temp);
         }
         else
         {
-            dom.Load(_filename);
+            dom.Load(filename);
         }
 
         var items = dom.GetItemsOrThrow();
 
         var count = 0;
-        
+
         var s = new StringBuilder();
-        
+
         foreach (XmlElement item in items)
         {
             if (skip > 0 && count < skip)
@@ -92,6 +130,23 @@ public class BloggGenerator
             text = text.Replace("<br /><br /><blockquote", "<br /><blockquote");
             text = text.Replace("</i><br /><br /><i><br /><br /></i>", "</i><br /><br />");
             s.AppendLine($"<p>{text}</p>");
+
+            // Append comments, if any.
+            var itemComments = comments.GetCommentsFromUrl(link);
+            if (itemComments.Count > 0)
+            {
+                s.Append($@"<p><b style=""color: #777777; font-size: smaller;"">{(itemComments.Count == 1 ? "1 kommentar:" : $"{itemComments.Count} kommentarer")}</b><br />");
+                
+                foreach (var c in itemComments)
+                {
+                    s.Append(c.GetHtml());
+
+                    if (c != itemComments.Last())
+                        s.Append("<br />");
+                }
+
+                s.Append("</p>");
+            }
         }
 
         return s.ToString().Replace("<br /><br />", "<br />");
@@ -100,36 +155,69 @@ public class BloggGenerator
     private string GenerateHeadersList(int skip = 0)
     {
         var dom = new XmlDocument();
+        var filename = _filename;
+        var comments = new CommentList();
 
-        if (_filename.StartsWith("http"))
+        // Check if a comment feed is provided.
+        if (filename.IndexOf('|') > -1)
         {
-            FileReader.DownloadTextFile(_filename, _temp);
+            var temp = filename.Split('|');
+            filename = temp[0];
+
+            // Load the comment feed.
+            var commentsDom = new XmlDocument();
+
+            if (temp[1].StartsWith("http"))
+            {
+                FileReader.DownloadTextFile(temp[1], _tempComment);
+                commentsDom.Load(_tempComment);
+            }
+            else
+            {
+                commentsDom.Load(temp[1]);
+            }
+
+            // Add comments to the list.
+            var commentItems = commentsDom.DocumentElement?.SelectSingleNode("channel")?.SelectNodes("item");
+
+            if (commentItems is { Count: > 0 })
+            {
+                comments.AddRange(
+                    from XmlElement commentItem in commentItems
+                    select new Comment(commentItem)
+                );
+            }
+        }
+
+        if (filename.StartsWith("http"))
+        {
+            FileReader.DownloadTextFile(filename, _temp);
             dom.Load(_temp);
         }
         else
         {
-            dom.Load(_filename);
+            dom.Load(filename);
         }
 
         var rss = dom.DocumentElement;
-        
+
         if (rss == null)
             throw new Exception();
 
         if (rss.SelectSingleNode("channel") is not XmlElement channel)
             throw new Exception();
-        
+
         var items = channel.SelectNodes("item");
-        
+
         if (items == null)
             throw new Exception();
-        
+
         var count = 0;
-        
+
         var s = new StringBuilder();
-        
+
         var added = false;
-        
+
         foreach (XmlElement item in items)
         {
             if (skip > 0 && count < skip)
@@ -149,7 +237,15 @@ public class BloggGenerator
             var dateString = ToDateString(item.SelectSingleNode("pubDate")?.InnerText);
             dateString = string.IsNullOrEmpty(dateString) ? "" : $@" ({dateString})";
 
-            s.AppendLine($@"<a href=""{item.SelectSingleNode("link")?.InnerText ?? ""}"">{item.SelectSingleNode("title")?.InnerText ?? ""}</a>{dateString}");
+            var link = item.SelectSingleNode("link")?.InnerText ?? "";
+
+            s.AppendLine($@"<a href=""{link}"">{item.SelectSingleNode("title")?.InnerText ?? ""}</a>{dateString}");
+
+            var itemComments = comments.GetCommentsFromUrl(link);
+
+            if (itemComments.Count > 0)
+                s.Append($@"<a href=""{link}"" style=""font-weight: normal; color: #777777; font-size: smaller;"">({(comments.Count == 1 ? "1 kommentar" : $"{comments.Count} kommentarer")})</a>");
+            
             added = true;
         }
 
@@ -162,7 +258,7 @@ public class BloggGenerator
             return "";
 
         var hit = Regex.Match(feedDate, @"([0-9]+)\s([A-Z][a-z]+)\s(20[0-9][0-9])", RegexOptions.IgnorePatternWhitespace);
-        
+
         if (!hit.Success)
             return "";
 

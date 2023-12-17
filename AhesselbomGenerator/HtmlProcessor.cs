@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using AhesselbomGenerator.Blogg;
 using AhesselbomGenerator.HallOfFame;
 using AhesselbomGenerator.LinkManagement;
 
@@ -221,7 +222,6 @@ public class HtmlProcessor
 
         using var sw = new StreamWriter(Destination, false, Encoding.UTF8);
         sw.Write(html);
-        sw.Write("WHAT IS THIS!!!!");
         sw.Flush();
         sw.Close();
     }
