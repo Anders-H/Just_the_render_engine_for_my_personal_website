@@ -28,6 +28,8 @@ public class BloggGenerator
 
     public BloggGenerator(string filename, int max)
     {
+        _tempComment = "";
+
         _filename = filename.StartsWith("http")
             ? filename
             : Path.Combine(Config.SourceDirectory, filename);
@@ -126,7 +128,18 @@ public class BloggGenerator
             text = text.Replace("<br /><br /><br />", "<br /><br />");
             text = text.Replace("<br /><br /><blockquote", "<br /><blockquote");
             text = text.Replace("</i><br /><br /><i><br /><br /></i>", "</i><br /><br />");
-            s.AppendLine($"<p>{text}</p>");
+
+            const string moreSymbol = "[&#8230;]";
+
+            if (text.IndexOf(moreSymbol, StringComparison.Ordinal) > -1)
+            {
+                text = text.Replace(moreSymbol, $@"<a href=""{link}"" style=""color: #777777; font-size: smaller;"">{moreSymbol}</a>", StringComparison.Ordinal);
+                s.AppendLine($"<p>{text}</p>");
+            }
+            else
+            {
+                s.AppendLine($@"<p>{text} <a href=""{link}"" style=""color: #777777; font-size: smaller;"">{moreSymbol}</a></p>");
+            }
 
             // Append comments, if any.
             var itemComments = comments.GetCommentsFromUrl(link);
@@ -241,7 +254,7 @@ public class BloggGenerator
             var itemComments = comments.GetCommentsFromUrl(link);
 
             if (itemComments.Count > 0)
-                s.Append($@"<a href=""{link}"" style=""font-weight: normal; color: #777777; font-size: smaller;"">({(comments.Count == 1 ? "1 kommentar" : $"{comments.Count} kommentarer")})</a>");
+                s.Append($@"<a href=""{link}"" style=""font-weight: normal; color: #777777; font-size: smaller;"">({(itemComments.Count == 1 ? "1 kommentar" : $"{itemComments.Count} kommentarer")})</a>");
             
             added = true;
         }
