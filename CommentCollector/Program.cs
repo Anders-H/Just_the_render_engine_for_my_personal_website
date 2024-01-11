@@ -17,7 +17,31 @@ var options = new FileStreamOptions
 
 var commentList = new List<Comment>();
 
+foreach (var inputFile in inputFiles)
+    commentList.AddRange(GetComments(inputFile));
+
+var sortedComments = commentList.OrderByDescending(x => x.PublishedTime).ToList();
+
 using var sw = new StreamWriter(outputFile, Encoding.UTF8, options);
 sw.WriteLine(@"<div class=""card"">");
+sw.WriteLine("<h3>Kommentarer</h3>");
+var count = 0;
+
+foreach (var comment in sortedComments)
+{
+    count++;
+
+    sw.WriteLine(comment);
+
+    if (count > 10)
+        break;
+}
 
 sw.WriteLine("</div>");
+
+return;
+
+List<Comment> GetComments(string filePath)
+{
+
+}
