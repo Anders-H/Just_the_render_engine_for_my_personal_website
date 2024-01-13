@@ -115,7 +115,7 @@ public class HtmlProcessor
             return new BloggGenerator(row.ExtractValue()).Generate(false);
 
         if (row.StartsWith("<!--BloggRssHeadersSkip5:"))
-            return new BloggGenerator(row.ExtractValue(), 5).Generate(false, 5);
+            return new BloggGenerator(row.ExtractValue(), 25).Generate(false, 5);
 
         if (row.StartsWith("<!--PodcastEpisodes:"))
             return new PodcastEpisodeListGenerator(row.ExtractValue()).Generate();

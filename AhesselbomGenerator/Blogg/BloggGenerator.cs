@@ -245,7 +245,7 @@ public class BloggGenerator
                 s.Append("<br />");
 
             var dateString = ToDateString(item.SelectSingleNode("pubDate")?.InnerText);
-            dateString = string.IsNullOrEmpty(dateString) ? "" : $@" ({dateString})";
+            dateString = string.IsNullOrEmpty(dateString) ? "" : $@" <span style=""font-weight: normal; color: #444444; font-size: smaller"">({dateString})</span>";
 
             var link = item.SelectSingleNode("link")?.InnerText ?? "";
 
