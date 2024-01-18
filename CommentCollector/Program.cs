@@ -107,7 +107,7 @@ DateTime? ToDateTime(string? feedDate)
         var minute = int.Parse(hit.Groups[5].Value);
         var second = int.Parse(hit.Groups[6].Value);
 
-        return new DateTime(year, month, date, hour, minute, second);
+        return new DateTime(year, month, date, hour, minute, second).AddHours(1);
     }
     catch
     {

@@ -25,15 +25,15 @@ public class HtmlProcessor
     {
         var source = FileReader.GetTextFileContent(Source);
         var rows = Regex.Split(source, @"\n");
-        
+
         var o = new StringBuilder();
 
         foreach (var row in rows)
             o.AppendLine(row.Trim().StartsWith("<!--") ? ProcessRow(row) : row);
-        
+
         if (string.IsNullOrWhiteSpace(Destination))
             throw new Exception("Missing destination.");
-        
+
         var generated = o.ToString();
 
         Save(generated);
@@ -42,7 +42,7 @@ public class HtmlProcessor
     private string ProcessRow(string row)
     {
         string d;
-            
+
         if (Directory.Exists(Config.Destination))
             d = Config.Destination;
         else
@@ -86,11 +86,16 @@ public class HtmlProcessor
         if (row.StartsWith("<!--LocalInstagram:"))
         {
             var x = row.ExtractValue();
-            return $@"<p class=""instaParagraph"">
-<a href=""https://www.instagram.com/p/{x}/"" target=""_blank""><img src=""{x}.jpg"" class=""instaImage"" /></a>
-</p>";
+
+            if (x.IndexOf('|') >= 0)
+            {
+                var parts = x.Split('|');
+                return $@"<p class=""instaParagraph""><a href=""https://www.instagram.com/p/{parts[0]}/"" target=""_blank""><img src=""{parts[0]}.jpg"" alt=""{parts[1]}"" title=""{parts[1]}"" class=""instaImage"" /></a></p>";
+            }
+
+            return $@"<p class=""instaParagraph""><a href=""https://www.instagram.com/p/{x}/"" target=""_blank""><img src=""{x}.jpg"" class=""instaImage"" /></a></p>";
         }
-            
+
         if (row.StartsWith("<!--LocalYouTube:"))
         {
             var x = row.ExtractValue();
@@ -98,10 +103,10 @@ public class HtmlProcessor
 <a href=""https://www.youtube.com/watch?v={x}"" target=""_blank""><img src=""{x}.jpg"" style="""" /></a>
 </p>";
         }
-            
+
         if (row.StartsWith("<!--YouTubeList:"))
             return new YouTubeListGenerator(row.ExtractValue()).Generate();
-            
+
         if (row.StartsWith("<!--BloggRss:"))
             return new BloggGenerator(row.ExtractValue()).Generate(true);
 
@@ -110,7 +115,7 @@ public class HtmlProcessor
 
         if (row.StartsWith("<!--StaticLink:"))
             return FileReader.GetTextFileContent(row.ExtractValue());
-            
+
         if (row.StartsWith("<!--BloggRssHeaders:"))
             return new BloggGenerator(row.ExtractValue()).Generate(false);
 
@@ -136,7 +141,7 @@ public class HtmlProcessor
                 var parent = arr[0];
 
                 result = new MenuProcessor(result)
-                    .RemoveSubmenusExceptFor(parent);
+                                    .RemoveSubmenusExceptFor(parent);
             }
             else
             {
@@ -151,7 +156,7 @@ public class HtmlProcessor
 
             return result;
         }
-            
+
         if (row.StartsWith("<!--Menu-->"))
         {
             var result = FileReader.GetTextFileContent(Path.Combine(s, "menu.txt"));
@@ -168,14 +173,14 @@ public class HtmlProcessor
 
         if (row.StartsWith("<!--Include:"))
             return FileReader.GetTextFileContent(Path.Combine(s, row.ExtractValue()));
-            
+
         if (row.StartsWith("<!--LinkList:"))
         {
             var linkList = new LinkList(Path.Combine(s, row.ExtractValue()));
             linkList.Load();
             return linkList.GenerateLinks();
         }
-        
+
         if (row.StartsWith("<!--Head:"))
         {
             var x = row.Split(':');
@@ -204,9 +209,9 @@ public class HtmlProcessor
     private void Save(string content)
     {
         var flatContent = Regex.Split(content, @"\n");
-            
+
         var s = new StringBuilder();
-            
+
         foreach (var c in flatContent)
         {
             if (string.IsNullOrWhiteSpace(c))
