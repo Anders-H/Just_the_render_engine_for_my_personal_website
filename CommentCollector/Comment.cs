@@ -23,5 +23,5 @@ public class Comment
         $"{Title} ({PublishedTime:yyyy-MM-dd hh:mm:ss})";
 
     public string ToHtml() =>
-        $@"<p><a href=""{Link}"">{HttpUtility.HtmlEncode(Creator)} ({PublishedTime:yyyy-MM-dd hh:mm})</a></p>{Content}";
+        $@"<p><a href=""{Link}"">{HttpUtility.HtmlEncode(Creator)} ({PublishedTime:yyyy-MM-dd HH:mm})</a></p>{Content}";
 }
