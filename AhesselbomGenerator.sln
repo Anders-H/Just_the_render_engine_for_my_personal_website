@@ -5,7 +5,9 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AhesselbomGenerator", "AhesselbomGenerator\AhesselbomGenerator.csproj", "{40208F6F-ADFB-4273-B56A-D73E17F6EE1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommentCollector", "CommentCollector\CommentCollector.csproj", "{38F7AC15-2070-419D-825E-EE8B3A13D5FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommentCollector", "CommentCollector\CommentCollector.csproj", "{38F7AC15-2070-419D-825E-EE8B3A13D5FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MrTweet", "MrTweet\MrTweet.csproj", "{B9E4EE6B-7464-4945-BFFF-9779205A5CD0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{38F7AC15-2070-419D-825E-EE8B3A13D5FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38F7AC15-2070-419D-825E-EE8B3A13D5FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38F7AC15-2070-419D-825E-EE8B3A13D5FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9E4EE6B-7464-4945-BFFF-9779205A5CD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9E4EE6B-7464-4945-BFFF-9779205A5CD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9E4EE6B-7464-4945-BFFF-9779205A5CD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9E4EE6B-7464-4945-BFFF-9779205A5CD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
