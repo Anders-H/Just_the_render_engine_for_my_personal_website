@@ -203,6 +203,11 @@ public class HtmlProcessor
             return $@"<!-- This row has: {value} -->";
         }
 
+        if (row.StartsWith("<!--Twitter") || row.StartsWith("<!-- Twitter"))
+        {
+            return Twitter.GetTweetHtml();
+        }
+
         throw new SystemException(row);
     }
 

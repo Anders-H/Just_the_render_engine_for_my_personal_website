@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MutableStringLibrary" Version="1.0.8" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.5" />
+    <PackageReference Include="MutableStringLibrary" Version="1.1.24" />
   </ItemGroup>
 
 </Project>

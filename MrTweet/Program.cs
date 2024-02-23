@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 
 const string dSource = "Data Source=.";
 const string dName = "Initial Catalog=WebSiteTweetDatabase";
