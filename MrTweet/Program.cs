@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Azure.Identity;
 using Microsoft.Data.SqlClient;
 using MrTweet;
 
