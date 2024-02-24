@@ -1,4 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Diagnostics;
+using Azure.Identity;
+using Microsoft.Data.SqlClient;
+using MrTweet;
 
 const string dSource = "Data Source=.";
 const string dName = "Initial Catalog=WebSiteTweetDatabase";
@@ -76,4 +79,28 @@ cmdSave.ExecuteNonQuery();
 
 cn.Close();
 
+Console.WriteLine("Generating https://ahesselbom.se/...");
+var renderProcess = Process.Start(@"D:\GitRepos\Just_the_render_engine_for_my_personal_website\AhesselbomGenerator\bin\Release\net8.0-windows\AhesselbomGenerator.exe");
+renderProcess.WaitForExit();
+renderProcess.Dispose();
+
+Console.WriteLine("Uploading...");
+ISecrets s = new MySecrets();
+var uploadProcessInfo = new ProcessStartInfo(@"D:\GitRepos\FtpMultiUpload\FtpMultiUpload\bin\Release\net8.0-windows\FtpMultiUpload.exe")
+{
+    Arguments = $@"{s.Target} {s.Username} {s.Password} ""{s.OutputPath}"" ""{s.OutputLog}"""
+};
+var uploadProcess = Process.Start(uploadProcessInfo);
+uploadProcess!.WaitForExit();
+uploadProcess!.Dispose();
+
 Console.WriteLine("Happy computer, good computer! Bye!");
+
+public interface ISecrets
+{
+    string Target { get; }
+    string Username { get; }
+    string Password { get; }
+    string OutputPath { get; }
+    string OutputLog { get; }
+}
