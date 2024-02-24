@@ -5,7 +5,7 @@ namespace AhesselbomGenerator;
 
 public class Twitter
 {
-    public static string GetTweetHtml()
+    public static string GetTweetHtml(bool skip5)
     {
         const string dSource = "Data Source=.";
         const string dName = "Initial Catalog=WebSiteTweetDatabase";
@@ -16,7 +16,7 @@ public class Twitter
         var s = new StringBuilder();
         using var cn = new SqlConnection(connectionString);
         cn.Open();
-        var cmd = new SqlCommand("SELECT TOP 5 [Text], [Date], TweetLink FROM dbo.Tweet ORDER BY [Date] DESC", cn);
+        var cmd = new SqlCommand(skip5 ? "SELECT [Text], [Date], TweetLink FROM dbo.Tweet ORDER BY [Date] DESC OFFSET (5) ROWS FETCH NEXT (5) ROWS ONLY" : "SELECT TOP 5 [Text], [Date], TweetLink FROM dbo.Tweet ORDER BY [Date] DESC", cn);
         var r = cmd.ExecuteReader();
 
         s.Append(@"<table style=""border:1px solid #555555;background-color:#eeeeee;border-radius:8px;"">");
