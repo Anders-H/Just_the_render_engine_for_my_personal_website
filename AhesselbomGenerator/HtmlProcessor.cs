@@ -200,12 +200,18 @@ public class HtmlProcessor
         if (row.StartsWith("<!--Has:"))
         {
             var value = row.ExtractValue();
-            return $@"<!-- This row has: {value} -->";
+            return $"<!-- This row has: {value} -->";
         }
 
         if (row.StartsWith("<!--Twitter"))
         {
-            return row.StartsWith("<!--TwitterSkip5") ? Twitter.GetTweetHtml(true) : Twitter.GetTweetHtml(false);
+            if (row.StartsWith("<!--TwitterSkip5"))
+                return Twitter.GetTweetHtml(true);
+
+            if (row.StartsWith("<!--TwitterTop100"))
+                return Twitter.GetTweetHtmlTop100();
+
+            return Twitter.GetTweetHtml(false);
         }
 
         throw new SystemException(row);
@@ -225,14 +231,21 @@ public class HtmlProcessor
             s.AppendLine(c.TrimEnd());
         }
 
-        var html = s.ToString();
+        var html = s.ToString().Trim();
 
-        if (html.IndexOf("ooooo", StringComparison.Ordinal) > 0)
-            Console.WriteLine(html);
+        var oldHtml = File.ReadAllText(Destination, Encoding.UTF8).Trim();
 
-        using var sw = new StreamWriter(Destination, false, Encoding.UTF8);
-        sw.Write(html);
-        sw.Flush();
-        sw.Close();
+        if (oldHtml == html)
+        {
+            Console.WriteLine($"No need to save {Destination}.");
+        }
+        else
+        {
+            Console.WriteLine($"Saving {Destination}...");
+            using var sw = new StreamWriter(Destination, false, Encoding.UTF8);
+            sw.Write(html);
+            sw.Flush();
+            sw.Close();
+        }
     }
 }
