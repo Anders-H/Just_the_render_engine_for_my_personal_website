@@ -193,7 +193,7 @@ public class HtmlProcessor
         if (row.StartsWith("<!--GenerationDate"))
         {
             var n = DateTime.Now;
-            var date = $@"{n:yyyy:MM:dd} {n:hh:mm}";
+            var date = $@"{n:yyyy:MM:dd} {n:HH:mm}";
             return $@"<!-- Generated using the third generation of the Monkeybone engine at {date}. -->";
         }
 
@@ -233,7 +233,16 @@ public class HtmlProcessor
 
         var html = s.ToString().Trim();
 
-        var oldHtml = File.ReadAllText(Destination, Encoding.UTF8).Trim();
+        string oldHtml;
+
+        try
+        {
+            oldHtml = File.ReadAllText(Destination, Encoding.UTF8).Trim();
+        }
+        catch
+        {
+            oldHtml = "";
+        }
 
         if (oldHtml == html)
         {

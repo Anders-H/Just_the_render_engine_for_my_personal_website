@@ -33,7 +33,7 @@ public class Twitter
             var link = r.GetString(2);
             s.Append("<tr>");
             s.Append($@"<td style=""text-align:center;font-size:smaller;white-space:nowrap;vertical-align:top;""><a href=""{link}"" target=""_blank"">{date:yyyy-MM-dd}</a></td>");
-            s.Append($@"<td style=""text-align:center;font-size:smaller;white-space:nowrap;vertical-align:top;""><a href=""{link}"" target=""_blank"">{date:hh:mm}</a></td>");
+            s.Append($@"<td style=""text-align:center;font-size:smaller;white-space:nowrap;vertical-align:top;""><a href=""{link}"" target=""_blank"">{date:HH:mm}</a></td>");
             s.Append($@"<td style=""text-align:left;font-size:smaller;vertical-align:top;""><a href=""{link}"" target=""_blank"">{text}</a></td>");
             s.Append("</tr>");
         }
@@ -72,7 +72,7 @@ public class Twitter
             var link = r.GetString(2);
             s.Append("<tr>");
             s.Append($@"<td style=""text-align:center;white-space:nowrap;vertical-align:top;""><a href=""{link}"" target=""_blank"">{date:yyyy-MM-dd}</a></td>");
-            s.Append($@"<td style=""text-align:center;white-space:nowrap;vertical-align:top;""><a href=""{link}"" target=""_blank"">{date:hh:mm}</a></td>");
+            s.Append($@"<td style=""text-align:center;white-space:nowrap;vertical-align:top;""><a href=""{link}"" target=""_blank"">{date:HH:mm}</a></td>");
             s.Append($@"<td style=""text-align:left;vertical-align:top;""><a href=""{link}"" target=""_blank"">{text}</a></td>");
             s.Append("</tr>");
         }
