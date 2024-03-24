@@ -82,4 +82,26 @@ public class Twitter
         cn.Close();
         return s.ToString();
     }
+
+    public static string GetLastTweet()
+    {
+        const string dSource = "Data Source=.";
+        const string dName = "Initial Catalog=WebSiteTweetDatabase";
+        const string iSecurity = "Integrated Security=True";
+        const string tCert = "Trust Server Certificate=True";
+        const string connectionString = $"{dSource};{dName};{iSecurity};{tCert}";
+
+        using var cn = new SqlConnection(connectionString);
+        cn.Open();
+        var cmd = new SqlCommand("SELECT TOP 1 [Text] FROM dbo.Tweet ORDER BY [Date] DESC", cn);
+        var r = cmd.ExecuteReader();
+        var result = "";
+        
+        if (r.Read())
+            result = r.GetString(0);
+
+        r.Close();
+        cn.Close();
+        return result;
+    }
 }

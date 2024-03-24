@@ -10,6 +10,9 @@ namespace AhesselbomGenerator;
 
 public class HtmlProcessor
 {
+    private string _lastBlogAddress = null;
+    private string _lastBlogHeader = null;
+    private string _lastTweet = null;
     private string Source { get; }
     private string Destination { get; set; }
     public string Upload { get; private set; }
@@ -29,7 +32,21 @@ public class HtmlProcessor
         var o = new StringBuilder();
 
         foreach (var row in rows)
-            o.AppendLine(row.Trim().StartsWith("<!--") ? ProcessRow(row) : row);
+        {
+            var r = row;
+
+            if (_lastBlogAddress == null)
+                GetLastBlogAddress(out _lastBlogAddress, out _lastBlogHeader);
+
+            if (_lastTweet == null)
+                _lastTweet = GetLastTweet();
+
+            r = r.Replace("LAST_BLOG_ADDRESS", _lastBlogAddress);
+            r = r.Replace("LAST_BLOG_HEADER", _lastBlogHeader);
+            r = r.Replace("LAST_TWEET", _lastTweet);
+
+            o.AppendLine(r.Trim().StartsWith("<!--") ? ProcessRow(r) : r);
+        }
 
         if (string.IsNullOrWhiteSpace(Destination))
             throw new Exception("Missing destination.");
@@ -139,9 +156,7 @@ public class HtmlProcessor
 
                 var arr = v.Split(':');
                 var parent = arr[0];
-
-                result = new MenuProcessor(result)
-                                    .RemoveSubmenusExceptFor(parent);
+                result = new MenuProcessor(result).RemoveSubmenusExceptFor(parent);
             }
             else
             {
@@ -256,5 +271,16 @@ public class HtmlProcessor
             sw.Flush();
             sw.Close();
         }
+    }
+
+    private void GetLastBlogAddress(out string lastBlogAddress, out string lastBlogHeader)
+    {
+        var bloggGenerator = new BloggGenerator(@"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\rss.xml");
+        bloggGenerator.GetLast(out lastBlogAddress, out lastBlogHeader);
+    }
+
+    private string GetLastTweet()
+    {
+        return Twitter.GetLastTweet();
     }
 }

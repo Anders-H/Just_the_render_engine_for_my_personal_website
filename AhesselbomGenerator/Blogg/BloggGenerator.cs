@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using AhesselbomGenerator.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace AhesselbomGenerator.Blogg;
 
@@ -162,8 +163,22 @@ public class BloggGenerator
         return s.ToString().Replace("<br /><br />", "<br />");
     }
 
+    public void GetLast(out string address, out string header)
+    {
+        GenerateHeadersList(out address, out header, 0);
+    }
+
     private string GenerateHeadersList(int skip = 0)
     {
+        var address = "";
+        var header = "";
+        return GenerateHeadersList(out address, out header, skip);
+    }
+
+    private string GenerateHeadersList(out string address, out string header, int skip = 0)
+    {
+        address = "";
+        header = "";
         var dom = new XmlDocument();
         var filename = _filename;
         var comments = new CommentList();
@@ -228,8 +243,17 @@ public class BloggGenerator
 
         var added = false;
 
+        var first = true;
+
         foreach (XmlElement item in items)
         {
+            if (first)
+            {
+                address = item.SelectSingleNode("link")?.InnerText ?? "";
+                header = item.SelectSingleNode("title")?.InnerText ?? "";
+                first = false;
+            }
+
             if (skip > 0 && count < skip)
             {
                 count++;
