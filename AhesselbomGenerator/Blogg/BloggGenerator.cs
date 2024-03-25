@@ -163,6 +163,12 @@ public class BloggGenerator
         return s.ToString().Replace("<br /><br />", "<br />");
     }
 
+    public string GetLastBlogHeaderUrl()
+    {
+        GetLast(out var address, out var header);
+        return $@"<a href=""{address}"">{header}</a>";
+    }
+
     public void GetLast(out string address, out string header)
     {
         GenerateHeadersList(out address, out header, 0);
