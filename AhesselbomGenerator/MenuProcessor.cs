@@ -36,9 +36,6 @@ public class MenuProcessor
         foreach (var row in rows)
             result.AppendLine(row.Value);
 
-        System.Diagnostics.Debug.WriteLine(_menuData);
-        System.Diagnostics.Debug.WriteLine(result.ToString());
-
         return result.ToString();
     }
 
