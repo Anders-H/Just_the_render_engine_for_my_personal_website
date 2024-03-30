@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.Design;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text;
 
 namespace AhesselbomGenerator;
 
@@ -23,15 +21,20 @@ public class BreadcrumbGenerator
             var p = parts[i];
 
             if (p.StartsWith('['))
-                p = p.Substring(1);
+                p = p[1..];
 
             if (p.EndsWith("]"))
-                p = p.Substring(0, p.Length - 1);
+                p = p[..^1];
 
             if (p.IndexOf('|') > -1)
             {
                 var linkParts = p.Split("|");
-                var url = linkParts[0].Replace("§", @"https://ahesselbom.se/");
+                var urlPart = linkParts[0];
+                
+                var url = urlPart == "§"
+                    ? "https://ahesselbom.se/home/"
+                    : urlPart.Replace("§", "https://ahesselbom.se/");
+                
                 var text = linkParts[1];
 
                 result.Append($@"<a href=""{url}"" class=""breadcrumLink"">{text}</a>");
