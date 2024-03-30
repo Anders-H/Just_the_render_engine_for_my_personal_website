@@ -10,9 +10,9 @@ namespace AhesselbomGenerator;
 
 public class HtmlProcessor
 {
-    private string _lastBlogAddress = null;
-    private string _lastBlogHeader = null;
-    private string _lastTweet = null;
+    private string? _lastBlogAddress;
+    private string? _lastBlogHeader;
+    private string? _lastTweet;
     private string Source { get; }
     private string Destination { get; set; }
     public string Upload { get; private set; }
@@ -38,8 +38,7 @@ public class HtmlProcessor
             if (_lastBlogAddress == null)
                 GetLastBlogAddress(out _lastBlogAddress, out _lastBlogHeader);
 
-            if (_lastTweet == null)
-                _lastTweet = GetLastTweet();
+            _lastTweet ??= GetLastTweet();
 
             r = r.Replace("LAST_BLOG_ADDRESS", _lastBlogAddress);
             r = r.Replace("LAST_BLOG_HEADER", _lastBlogHeader);
@@ -211,8 +210,8 @@ public class HtmlProcessor
         if (row.StartsWith("<!--GenerationDate"))
         {
             var n = DateTime.Now;
-            var date = $@"{n:yyyy:MM:dd} {n:HH:mm}";
-            return $@"<!-- Generated using the third generation of the Monkeybone engine at {date}. -->";
+            var date = $"{n:yyyy:MM:dd} {n:HH:mm}";
+            return $"<!-- Generated using the third generation of the Monkeybone engine at {date}. -->";
         }
 
         if (row.StartsWith("<!--Has:"))

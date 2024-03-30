@@ -20,6 +20,6 @@ internal class HallOfFameEntry
         ImageCredit = imageCredit;
         ImageCreditUrl = imageCreditUrl;
         Page = page;
-        Quotes = new();
+        Quotes = [];
     }
 }

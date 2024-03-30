@@ -5,8 +5,8 @@ using CommentCollector;
 
 var inputFiles = new List<string>
 {
-    @"C:/Users/hbom/OneDrive/ahesselbom.se2/Output/rss/rss_comments.xml",
-    @"C:/Users/hbom/OneDrive/ahesselbom.se2/Output/rss/winsoft-comments.xml"
+    "C:/Users/hbom/OneDrive/ahesselbom.se2/Output/rss/rss_comments.xml",
+    "C:/Users/hbom/OneDrive/ahesselbom.se2/Output/rss/winsoft-comments.xml"
 };
 
 const string outputFile = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Source\comments.txt";
@@ -43,7 +43,7 @@ sw.WriteLine("</div>");
 
 return;
 
-List<Comment> GetComments(string filePath)
+IEnumerable<Comment> GetComments(string filePath)
 {
     using var sr = new StreamReader(filePath);
     var xml = sr.ReadToEnd();

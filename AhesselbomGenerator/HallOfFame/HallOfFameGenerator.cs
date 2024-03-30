@@ -43,7 +43,7 @@ public class HallOfFameGenerator
 
             foreach (var quote in item.Quotes)
                 x.Write(string.IsNullOrEmpty(quote.Url)
-                    ? $@"<p>&quot;{quote.QuoteText}&quot;</p>"
+                    ? $"<p>&quot;{quote.QuoteText}&quot;</p>"
                     : $@"<p>&quot;<a href=""{quote.Url}"" target=""_blank"">{quote.QuoteText}</a>&quot;</p>");
 
             x.WriteLine();

@@ -5,7 +5,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 using AhesselbomGenerator.Xml;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace AhesselbomGenerator.Blogg;
 
@@ -119,7 +118,7 @@ public class BloggGenerator
             var link = item.SelectSingleNode("link")?.InnerText ?? "";
             var header = item.SelectSingleNode("title")?.InnerText ?? "";
             var dateString = ToDateString(item.SelectSingleNode("pubDate")?.InnerText);
-            dateString = string.IsNullOrEmpty(dateString) ? "" : $@"<br /><i>{dateString}</i>";
+            dateString = string.IsNullOrEmpty(dateString) ? "" : $"<br /><i>{dateString}</i>";
 
             s.AppendLine($@"<p><b><a href=""{link}"">{header}</a></b>{dateString}</p>");
             var text = item.SelectSingleNode("description")?.InnerText ?? "";
@@ -171,7 +170,7 @@ public class BloggGenerator
 
     public void GetLast(out string address, out string header)
     {
-        GenerateHeadersList(out address, out header, 0);
+        GenerateHeadersList(out address, out header);
     }
 
     private string GenerateHeadersList(int skip = 0)
