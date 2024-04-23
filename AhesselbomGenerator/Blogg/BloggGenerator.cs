@@ -164,26 +164,27 @@ public class BloggGenerator
 
     public string GetLastBlogHeaderUrl()
     {
-        GetLast(out var address, out var header);
+        GetLast(out var address, out var header, out var shortText);
         return $@"<a href=""{address}"">{header}</a>";
     }
 
-    public void GetLast(out string address, out string header)
+    public void GetLast(out string address, out string header, out string shortText)
     {
-        GenerateHeadersList(out address, out header);
+        GenerateHeadersList(out address, out header, out shortText);
     }
 
     private string GenerateHeadersList(int skip = 0)
     {
         var address = "";
         var header = "";
-        return GenerateHeadersList(out address, out header, skip);
+        return GenerateHeadersList(out address, out header, out _, skip);
     }
 
-    private string GenerateHeadersList(out string address, out string header, int skip = 0)
+    private string GenerateHeadersList(out string address, out string header, out string shortText, int skip = 0)
     {
         address = "";
         header = "";
+        shortText = "";
         var dom = new XmlDocument();
         var filename = _filename;
         var comments = new CommentList();
@@ -256,6 +257,7 @@ public class BloggGenerator
             {
                 address = item.SelectSingleNode("link")?.InnerText ?? "";
                 header = item.SelectSingleNode("title")?.InnerText ?? "";
+                shortText = item.SelectSingleNode("description")?.InnerText ?? "";
                 first = false;
             }
 

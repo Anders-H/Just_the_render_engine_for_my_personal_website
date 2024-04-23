@@ -12,6 +12,7 @@ public class HtmlProcessor
 {
     private string? _lastBlogAddress;
     private string? _lastBlogHeader;
+    private string? _lastBlogShortText;
     private string? _lastTweet;
     private string Source { get; }
     private string Destination { get; set; }
@@ -36,12 +37,14 @@ public class HtmlProcessor
             var r = row;
 
             if (_lastBlogAddress == null)
-                GetLastBlogAddress(out _lastBlogAddress, out _lastBlogHeader);
+                GetLastBlogAddress(out _lastBlogAddress, out _lastBlogHeader, out _lastBlogShortText);
 
             _lastTweet ??= GetLastTweet();
 
             r = r.Replace("LAST_BLOG_ADDRESS", _lastBlogAddress);
             r = r.Replace("LAST_BLOG_HEADER", _lastBlogHeader);
+            r = r.Replace("LAST_BLOG_SHORT_TEXT", _lastBlogShortText);
+            r = r.Replace("[&#8230;]", $@"<a href=""{_lastBlogAddress}"">[&#8230;]</a>");
             r = r.Replace("LAST_TWEET", _lastTweet);
 
             o.AppendLine(r.Trim().StartsWith("<!--") ? ProcessRow(r) : r);
@@ -275,10 +278,10 @@ public class HtmlProcessor
         }
     }
 
-    private void GetLastBlogAddress(out string lastBlogAddress, out string lastBlogHeader)
+    private void GetLastBlogAddress(out string lastBlogAddress, out string lastBlogHeader, out string lastBlogShortText)
     {
         var bloggGenerator = new BloggGenerator(@"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\rss.xml");
-        bloggGenerator.GetLast(out lastBlogAddress, out lastBlogHeader);
+        bloggGenerator.GetLast(out lastBlogAddress, out lastBlogHeader, out lastBlogShortText);
     }
 
     private string GetLastTweet()
