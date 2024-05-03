@@ -41,7 +41,7 @@ Console.Write("Time (HH:MM, default is now): ");
 var time = (Console.ReadLine() ?? "").Trim();
 
 if (string.IsNullOrWhiteSpace(time))
-    time = DateTime.Now.ToString("hh:mm");
+    time = DateTime.Now.ToString("HH:mm");
 
 Console.Write("Link to tweet: ");
 var tweetLink = (Console.ReadLine() ?? "").Trim();
@@ -75,7 +75,6 @@ cmdSave.Parameters.AddWithValue("@Text", text);
 cmdSave.Parameters.AddWithValue("@Date", tweetDate);
 cmdSave.Parameters.AddWithValue("@TweetLink", tweetLink);
 cmdSave.ExecuteNonQuery();
-
 cn.Close();
 
 Console.WriteLine("Generating https://ahesselbom.se/...");
