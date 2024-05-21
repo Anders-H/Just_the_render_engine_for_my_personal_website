@@ -54,11 +54,17 @@ public class PodcastEpisodeListGenerator
         foreach (XmlElement item in items)
         {
             s.Append("<p>");
-            s.Append($"<b>Avsnitt {avsnitt}: {item.GetText("title")}</b><br />");
+
+            var title = item.GetText("title");
+
+            if (title.StartsWith("Avsnitt ", StringComparison.CurrentCultureIgnoreCase))
+                s.Append($"<b>{item.GetText("title")}</b><br />");
+            else
+                s.Append($"<b>Avsnitt {avsnitt}: {item.GetText("title")}</b><br />");
 
             var mp3 = item.SelectNode("enclosure")!.GetAttributeValue("url");
             
-            s.Append($@"<a href=""{mp3}"" target=""_blank"">Lyssna ({mp3})</a>");
+            s.Append($@"<i><a href=""{mp3}"" target=""_blank"">Lyssna ({mp3})</a></i>");
             s.Append("</p>");
 
             avsnitt--;
