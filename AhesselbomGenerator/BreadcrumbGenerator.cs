@@ -32,7 +32,7 @@ public class BreadcrumbGenerator
                 var urlPart = linkParts[0];
                 
                 var url = urlPart == "§"
-                    ? "https://ahesselbom.se/home/"
+                    ? "https://ahesselbom.se/" // Tidigare https://ahesselbom.se/home/
                     : urlPart.Replace("§", "https://ahesselbom.se/");
                 
                 var text = linkParts[1];

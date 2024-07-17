@@ -210,6 +210,15 @@ public class HtmlProcessor
             return headGenerator.Generate(x[2], "style25.css");
         }
 
+        if (row.StartsWith("<!--Head2024:"))
+        {
+            var x = row.Split(':');
+            x[2] = x[2].Replace("-->", "");
+
+            var headGenerator = new HeadGenerator(int.Parse(x[1]));
+            return headGenerator.Generate2024(x[2]);
+        }
+
         if (row.StartsWith("<!--GenerationDate"))
         {
             var n = DateTime.Now;
