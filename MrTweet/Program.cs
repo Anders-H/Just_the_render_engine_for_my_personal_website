@@ -65,14 +65,14 @@ if (save != "y")
 
 using var cmdSave = new SqlCommand(@"
 INSERT INTO dbo.Tweet (
-    [Text], [Date], TweetLink
+    [Date], [Text], TweetLink
 )
 VALUES (
-    @Text, @Date, @TweetLink
+    @Date, @Text, @TweetLink
 )", cn);
 
-cmdSave.Parameters.AddWithValue("@Text", text);
 cmdSave.Parameters.AddWithValue("@Date", tweetDate);
+cmdSave.Parameters.AddWithValue("@Text", text);
 cmdSave.Parameters.AddWithValue("@TweetLink", tweetLink);
 cmdSave.ExecuteNonQuery();
 cn.Close();
@@ -93,12 +93,3 @@ uploadProcess!.WaitForExit();
 uploadProcess!.Dispose();
 
 Console.WriteLine("Happy computer, good computer! Bye!");
-
-public interface ISecrets
-{
-    string Target { get; }
-    string Username { get; }
-    string Password { get; }
-    string OutputPath { get; }
-    string OutputLog { get; }
-}
