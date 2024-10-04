@@ -124,7 +124,11 @@ public class HtmlProcessor
         }
 
         if (row.StartsWith("<!--YouTubeList:"))
-            return new YouTubeListGenerator(row.ExtractValue()).Generate();
+        {
+            var youTube = new YouTubeListGenerator(row.ExtractValue()).Generate();
+            File.WriteAllText("C:\\Users\\hbom\\OneDrive\\ahesselbom.se2\\Output\\rss\\veckanshesselbom_rss.xml", youTube.Rss);
+            return youTube.Html;
+        }
 
         if (row.StartsWith("<!--BloggRss:"))
             return new BloggGenerator(row.ExtractValue()).Generate(true);
