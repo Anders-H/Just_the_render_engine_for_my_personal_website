@@ -9,6 +9,7 @@ public class Twitter
     private const string bold = "font-weight:bold;";
     private const string left = "text-align:left;vertical-align:top;";
     private const string center = "text-align:center;vertical-align:top;";
+
     public static string GetTweetHtml(bool skip5)
     {
         var s = new StringBuilder();
