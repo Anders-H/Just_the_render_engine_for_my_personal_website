@@ -1,5 +1,5 @@
-﻿using System.Drawing.Text;
-using System.Text;
+﻿using System.Text;
+using AhesselbomGenerator.Xml;
 using Microsoft.Data.SqlClient;
 
 namespace AhesselbomGenerator;
@@ -73,6 +73,43 @@ public class Twitter
         }
 
         s.Append("</table>");
+        r.Close();
+        cn.Close();
+        return s.ToString();
+    }
+
+    public static string GetTweetRssTop100()
+    {
+        var s = new StringBuilder();
+        using var cn = new SqlConnection(ConnectionStringBuilder.ConnectionString);
+        cn.Open();
+        var cmd = new SqlCommand("SELECT TOP 100 [Date], [Text], TweetLink FROM dbo.Tweet ORDER BY [Date] DESC", cn);
+        var r = cmd.ExecuteReader();
+
+        s.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8"" ?>
+<rss version=""2.0"" xmlns:atom=""http://www.w3.org/2005/Atom"">
+<channel>
+  <atom:link href=""https://ahesselbom.se/rss/ahesselbom_x_rss.xml"" rel=""self"" type=""application/rss+xml"" />
+  <title>Anders Hesselbom på X (Twitter)</title>
+  <link>https://x.com/ahesselbom</link>
+  <description>Programmerare, skeptiker, sekulärhumanist, antirasist, podcastproducent och författare till bok om C64. Tweets in Swedish on politics and religion.</description>");
+
+        while (r.Read())
+        {
+            var date = r.GetDateTime(0);
+            var text = r.GetString(1);
+            var link = r.GetString(2);
+            s.AppendLine($@"  <item>
+    <guid isPermaLink=""true"">{link}</guid>
+    <pubDate>{RssHelp.FormatDate(date)}</pubDate>
+    <title>{text}</title>
+    <link>{link}</link>
+    <description>{text}</description>
+  </item>");
+        }
+
+        s.AppendLine(@"</channel>
+</rss>");
         r.Close();
         cn.Close();
         return s.ToString();

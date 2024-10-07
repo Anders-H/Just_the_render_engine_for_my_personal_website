@@ -242,7 +242,10 @@ public class HtmlProcessor
                 return Twitter.GetTweetHtml(true);
 
             if (row.StartsWith("<!--TwitterTop100"))
+            {
+                File.WriteAllText("C:\\Users\\hbom\\OneDrive\\ahesselbom.se2\\Output\\rss\\ahesselbom_x_rss.xml", Twitter.GetTweetRssTop100());
                 return Twitter.GetTweetHtmlTop100();
+            }
 
             return Twitter.GetTweetHtml(false);
         }

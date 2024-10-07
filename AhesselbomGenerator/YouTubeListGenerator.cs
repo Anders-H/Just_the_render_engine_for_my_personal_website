@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using AhesselbomGenerator.Xml;
 
 namespace AhesselbomGenerator;
 
@@ -22,39 +23,7 @@ public class YouTubeListGenerator
         var rows = Regex.Split(FileReader.GetTextFileContent(_filename), @"\n");
         html.AppendLine(@"<table border=""0"" cellspacing=""0"" cellpadding=""0"">");
         var eachOther = false;
-
         var y = DateTime.Now.Year.ToString("0000");
-        var h = DateTime.Now.Hour.ToString("00");
-        var d = DateTime.Now.Day.ToString("0");
-
-        var dayOfWeek = DateTime.Now.DayOfWeek switch
-        {
-            DayOfWeek.Sunday => "Sun",
-            DayOfWeek.Monday => "Mon",
-            DayOfWeek.Tuesday => "Tue",
-            DayOfWeek.Wednesday => "Wed",
-            DayOfWeek.Thursday => "Thu",
-            DayOfWeek.Friday => "Fri",
-            DayOfWeek.Saturday => "Sat",
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-        var month = DateTime.Now.Month switch
-        {
-            1 => "Jan",
-            2 => "Feb",
-            3 => "Mar",
-            4 => "Apr",
-            5 => "May",
-            6 => "Jun",
-            7 => "Jul",
-            8 => "Aug",
-            9 => "Sep",
-            10 => "Oct",
-            11 => "Nov",
-            12 => "Dec",
-            _ => throw new ArgumentOutOfRangeException()
-        };
 
         rss.AppendLine($@"<?xml version=""1.0"" encoding=""UTF-8"" ?>
 <rss xmlns:content=""http://purl.org/rss/1.0/modules/content/"" xmlns:wfw=""http://wellformedweb.org/CommentAPI/"" xmlns:dc=""http://purl.org/dc/elements/1.1/"" xmlns:atom=""http://www.w3.org/2005/Atom"" xmlns:sy=""http://purl.org/rss/1.0/modules/syndication/"" xmlns:slash=""http://purl.org/rss/1.0/modules/slash/"" version=""2.0"">
@@ -63,8 +32,8 @@ public class YouTubeListGenerator
  <description>De senaste YouTube-uppladdningarna av Anders Hesselbom</description>
  <link>https://ahesselbom.se/youtube/rss.xml</link>
  <copyright>{y} Anders Hesselbom</copyright>
- <lastBuildDate>{dayOfWeek}, {d} {month} {y} {h}:00:00 +0000</lastBuildDate>
- <pubDate>{dayOfWeek}, {d} {month} {y} {h}:00:00 +0000</pubDate>
+ <lastBuildDate>{RssHelp.FormatDate(DateTime.Now)}</lastBuildDate>
+ <pubDate>{RssHelp.FormatDate(DateTime.Now)}</pubDate>
  <ttl>120</ttl>");
 
         foreach (var row in rows)
@@ -90,41 +59,12 @@ public class YouTubeListGenerator
             var day = int.Parse(pubDateParts[2]);
             var dt = new DateTime(year, m, day);
 
-            var postDay = dt.DayOfWeek switch
-            {
-                DayOfWeek.Sunday => "Sun",
-                DayOfWeek.Monday => "Mon",
-                DayOfWeek.Tuesday => "Tue",
-                DayOfWeek.Wednesday => "Wed",
-                DayOfWeek.Thursday => "Thu",
-                DayOfWeek.Friday => "Fri",
-                DayOfWeek.Saturday => "Sat",
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            var postMonth = dt.Month switch
-            {
-                1 => "Jan",
-                2 => "Feb",
-                3 => "Mar",
-                4 => "Apr",
-                5 => "May",
-                6 => "Jun",
-                7 => "Jul",
-                8 => "Aug",
-                9 => "Sep",
-                10 => "Oct",
-                11 => "Nov",
-                12 => "Dec",
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
             rss.AppendLine($@" <item>
   <title>{parts[1]}</title>
   <description>Se videon på YouTube!</description>
   <link>https://www.youtube.com/watch?v={parts[0]}</link>
   <guid isPermaLink=""true"">https://www.youtube.com/watch?v={parts[0]}</guid>
-  <pubDate>{postDay}, {day:0} {postMonth} {year:0000} 20:00:00 +0000</pubDate>
+  <pubDate>{RssHelp.FormatDate(dt)}</pubDate>
  </item>");
         }
 
