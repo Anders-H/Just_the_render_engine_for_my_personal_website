@@ -19,7 +19,7 @@ var items = new List<Item>();
 
 foreach (var f in rssFiles)
 {
-    var xmlList = f.GetItems(2);
+    var xmlList = f.GetItems(10);
 
     foreach (var xmlElement in xmlList)
     {
