@@ -48,6 +48,11 @@ IEnumerable<Comment> GetComments(string filePath)
     using var sr = new StreamReader(filePath);
     var xml = sr.ReadToEnd();
     sr.Close();
+    var xmlStart = xml.IndexOf("<?xml", StringComparison.Ordinal);
+
+    if (xmlStart > 0)
+        xml = xml[xmlStart..].Trim();
+
     var dom = new XmlDocument();
     dom.LoadXml(xml);
     var namespaceManager = new XmlNamespaceManager(dom.NameTable);
