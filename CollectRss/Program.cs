@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
 using System.Xml;
-using static System.Net.Mime.MediaTypeNames;
 
 var rssFiles = new List<FeedFile>
 {
@@ -31,7 +30,12 @@ foreach (var f in rssFiles)
         const string parseFormat = "ddd, dd MMM yyyy HH:mm:ss zzz";
         var dateStringValue = dateString.InnerText;
         dateStringValue = dateStringValue.Replace(" GMT", " +0000");
+        Console.WriteLine(dateStringValue);
         var date = DateTime.ParseExact(dateStringValue, parseFormat, CultureInfo.InvariantCulture);
+
+        if (f.Name.StartsWith("Podcast"))
+            date = new DateTime(date.Year, date.Month, date.Day, 10, 0, 0);
+
         var header = xmlElement.SelectSingleNode("title")?.InnerText ?? "";
         var text = xmlElement.SelectSingleNode("description")?.InnerText ?? "";
         var url = xmlElement.SelectSingleNode("link")?.InnerText ?? "";
@@ -139,7 +143,7 @@ public class Item
             case "X (Twitter)":
                 s.Append("<p>");
                 s.Append(OpenAnchor);
-                s.Append($@"<i style=""font-weight: lighter;"">{FeedName}:</i> <b>{TwitterHeader}</b>");
+                s.Append($@"<img src=""./img/x.png"" alt=""X (Twitter)"" style=""width: 15px; height: 15px;""> <b>{TwitterHeader}</b>");
                 s.Append("</a>");
                 s.Append($"<br/><i>{DateString}</i>");
                 s.Append("</p>");

@@ -6,12 +6,12 @@ public class RssHelp
 {
     public static string FormatDate(DateTime dt)
     {
-        var y = DateTime.Now.Year.ToString("0000");
-        var h = DateTime.Now.Hour.ToString("00");
-        var m = DateTime.Now.Minute.ToString("00");
-        var d = DateTime.Now.Day.ToString("00");
-        var dayOfWeek = DayOfWeekAsString(DateTime.Now.DayOfWeek);
-        var month = MonthAsString(DateTime.Now.Month);
+        var y = dt.Year.ToString("0000");
+        var h = dt.Hour.ToString("00");
+        var m = dt.Minute.ToString("00");
+        var d = dt.Day.ToString("00");
+        var dayOfWeek = DayOfWeekAsString(dt.DayOfWeek);
+        var month = MonthAsString(dt.Month);
         return $"{dayOfWeek}, {d} {month} {y} {h}:{m}:00 +0200";
     }
 
