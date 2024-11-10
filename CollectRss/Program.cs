@@ -157,9 +157,23 @@ public class Item
                 break;
             case "YouTube (Veckans Hesselbom)":
             case "YouTube (Flimmer Duo)":
+                string icon;
+
+                switch (FeedName)
+                {
+                    case "YouTube (Veckans Hesselbom)":
+                        icon = "veckanshesselbom";
+                        break;
+                    case "YouTube (Flimmer Duo)":
+                        icon = "flimmerduo";
+                        break;
+                    default:
+                        throw new SystemException("You suck!");
+                }
+
                 s.Append("<p>");
                 s.Append(OpenAnchor);
-                s.Append($@"<i style=""font-weight: lighter;"">{FeedName}:</i> <b>{Header}</b>");
+                s.Append($@"<img src=""./img/{icon}.png"" alt=""{FeedName}"" style=""width: 15px; height: 15px;""> <b>{Header}</b>");
                 s.Append("</a>");
                 s.Append($"<br/><i>{DateString}</i>");
                 s.Append("</p>");
