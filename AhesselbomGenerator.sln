@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MrTweet", "MrTweet\MrTweet.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectRss", "CollectRss\CollectRss.csproj", "{9AF4E7F8-09FA-4FE6-8BBC-18EE21A33BC6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompressCss", "CompressCss\CompressCss.csproj", "{3ABB9721-2D82-463A-9A36-1200C9C7ABBA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{9AF4E7F8-09FA-4FE6-8BBC-18EE21A33BC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AF4E7F8-09FA-4FE6-8BBC-18EE21A33BC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AF4E7F8-09FA-4FE6-8BBC-18EE21A33BC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ABB9721-2D82-463A-9A36-1200C9C7ABBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ABB9721-2D82-463A-9A36-1200C9C7ABBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ABB9721-2D82-463A-9A36-1200C9C7ABBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ABB9721-2D82-463A-9A36-1200C9C7ABBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

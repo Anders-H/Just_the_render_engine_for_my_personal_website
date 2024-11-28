@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CompressCss": {
+      "commandName": "Project",
+      "commandLineArgs": "\"D:\\Temp\\style25.source.css\" \"D:\\Temp\\style25.css\""
+    }
+  }
+}
