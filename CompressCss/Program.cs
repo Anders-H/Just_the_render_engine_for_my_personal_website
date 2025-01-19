@@ -12,8 +12,6 @@ if (args.Length != 2)
 
 var sourceFilename = args[0];
 var targetFilename = args[1];
-var targetFileInfo = new FileInfo(targetFilename);
-var targetFullPath = targetFileInfo.FullName;
 var sourceData = File.ReadAllText(sourceFilename);
 var rows = sourceData.Split(ControlChars.CrLf.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 var targetData = new StringBuilder();
@@ -29,10 +27,10 @@ foreach (var row in rows)
         continue;
     }
 
-    targetData.AppendLine(UseReplacement(row, replacements));
+    targetData.Append(UseReplacement(row, replacements));
 }
 
-File.WriteAllText(targetFullPath, targetData.ToString());
+File.WriteAllText(targetFilename, targetData.ToString());
 
 return;
 

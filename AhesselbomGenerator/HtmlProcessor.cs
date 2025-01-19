@@ -27,6 +27,9 @@ public class HtmlProcessor
 
     public void Process()
     {
+        if (Source.IndexOf(@"\publicservice\", StringComparison.Ordinal) > 5 && !Source.EndsWith(@"\publicservice\index.html"))
+            return;
+
         var source = FileReader.GetTextFileContent(Source);
         var rows = Regex.Split(source, @"\n");
 
