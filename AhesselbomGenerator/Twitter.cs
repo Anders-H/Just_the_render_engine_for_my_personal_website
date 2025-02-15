@@ -7,10 +7,6 @@ namespace AhesselbomGenerator;
 
 public class Twitter
 {
-    private const string bold = "font-weight:bold;";
-    private const string left = "text-align:left;vertical-align:top;";
-    private const string center = "text-align:center;vertical-align:top;";
-
     public static string GetTweetHtml(bool skip5)
     {
         var s = new StringBuilder();
@@ -21,27 +17,25 @@ public class Twitter
         const string take5Sql = $"SELECT TOP 5 {fields} FROM dbo.Tweet ORDER BY [Date] DESC";
         var cmd = new SqlCommand(skip5 ? skip5Sql : take5Sql, cn);
         var r = cmd.ExecuteReader();
-
-        s.Append(@"<table style=""border:1px solid #555555;background-color:#eeeeee;border-radius:8px;"">");
-        s.Append("<tr>");
-        s.Append($@"<th style=""{bold}{center}"">Date</th>");
-        s.Append($@"<th style=""{bold}{center}"">Time</th>");
-        s.Append($@"<th style=""{bold}{left}""><a href=""https://x.com/ahesselbom"" target=""_blank"">X (Twitter)</a></th>");
-        s.Append("</tr>");
+        s.Append(@"<p><a href=""https://x.com/ahesselbom"" target=""_blank"">Följ mig på X (Twitter)</a></p>");
+        s.AppendLine("<p>");
+        var count = 0;
 
         while (r.Read())
         {
             var date = r.GetDateTime(0);
             var text = r.GetString(1);
             var link = r.GetString(2);
-            s.Append("<tr>");
-            s.Append($@"<td style=""{center}white-space:nowrap;font-size:smaller;""><a href=""{link}"" target=""_blank"">{date:yyyy-MM-dd}</a></td>");
-            s.Append($@"<td style=""{center}white-space:nowrap;font-size:smaller;""><a href=""{link}"" target=""_blank"">{date:HH:mm}</a></td>");
-            s.Append($@"<td style=""{left}font-size:smaller;""><a href=""{link}"" target=""_blank"">{text}</a></td>");
-            s.Append("</tr>");
+            s.AppendLine(@"<span style=""font-size:smaller;"">");
+            s.Append($@"<b>{date:yyyy-MM-dd} {date:HH:mm}:</b> <a style=""font-size:small;"" href=""{link}"" target=""_blank"">{text}</a>");
+            s.AppendLine("</span>");
+            count++;
+
+            if (count <= 4)
+                s.AppendLine("<br /><br />");
         }
 
-        s.Append("</table>");
+        s.AppendLine("</p>");
         r.Close();
         cn.Close();
         return s.ToString();
@@ -54,27 +48,24 @@ public class Twitter
         cn.Open();
         var cmd = new SqlCommand("SELECT TOP 100 [Date], [Text], TweetLink FROM dbo.Tweet ORDER BY [Date] DESC", cn);
         var r = cmd.ExecuteReader();
-
-        s.Append(@"<table style=""border:none;"">");
-        s.Append("<tr>");
-        s.Append($@"<th style=""{bold}{center}"">Date</th>");
-        s.Append($@"<th style=""{bold}{center}"">Time</th>");
-        s.Append($@"<th style=""{bold}{left}""><a href=""https://x.com/ahesselbom"" target=""_blank"">X (Twitter)</a></th>");
-        s.Append("</tr>");
+        s.AppendLine("<p>");
+        var count = 0;
 
         while (r.Read())
         {
             var date = r.GetDateTime(0);
             var text = r.GetString(1);
             var link = r.GetString(2);
-            s.Append("<tr>");
-            s.Append($@"<td style=""{center}white-space:nowrap;""><a href=""{link}"" target=""_blank"">{date:yyyy-MM-dd}</a></td>");
-            s.Append($@"<td style=""{center}white-space:nowrap;""><a href=""{link}"" target=""_blank"">{date:HH:mm}</a></td>");
-            s.Append($@"<td style=""{left}""><a href=""{link}"" target=""_blank"">{text}</a></td>");
-            s.Append("</tr>");
+            s.AppendLine(@"<span style=""font-size:smaller;"">");
+            s.Append($@"<b>{date:yyyy-MM-dd} {date:HH:mm}:</b> <a style=""font-size:small;"" href=""{link}"" target=""_blank"">{text}</a>");
+            s.AppendLine("</span>");
+            count++;
+
+            if (count <= 99)
+                s.AppendLine("<br /><br />");
         }
 
-        s.Append("</table>");
+        s.AppendLine("</p>");
         r.Close();
         cn.Close();
         return s.ToString();
