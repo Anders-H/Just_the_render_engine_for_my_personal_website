@@ -24,7 +24,7 @@ public class Twitter
         while (r.Read())
         {
             var date = r.GetDateTime(0);
-            var text = r.GetString(1);
+            var text = r.GetString(1).Replace("&", "&amp;");
             var link = r.GetString(2);
             s.AppendLine(@"<span style=""font-size:smaller;"">");
             s.Append($@"<b>{date:yyyy-MM-dd} {date:HH:mm}:</b> <a style=""font-size:small;"" href=""{link}"" target=""_blank"">{text}</a>");
@@ -54,7 +54,7 @@ public class Twitter
         while (r.Read())
         {
             var date = r.GetDateTime(0);
-            var text = r.GetString(1);
+            var text = r.GetString(1).Replace("&", "&amp;");
             var link = r.GetString(2);
             s.AppendLine(@"<span style=""font-size:smaller;"">");
             s.Append($@"<b>{date:yyyy-MM-dd} {date:HH:mm}:</b> <a style=""font-size:small;"" href=""{link}"" target=""_blank"">{text}</a>");
@@ -91,7 +91,7 @@ public class Twitter
         while (r.Read())
         {
             var date = r.GetDateTime(0);
-            var text = r.GetString(1);
+            var text = r.GetString(1).Replace("&", "&amp;");
             var link = r.GetString(2);
             s.AppendLine($@"  <item>
     <guid isPermaLink=""true"">{link}</guid>
@@ -118,7 +118,7 @@ public class Twitter
         var result = "";
         
         if (r.Read())
-            result = r.GetString(0);
+            result = r.GetString(0).Replace("&", "&amp;");
 
         r.Close();
         cn.Close();
