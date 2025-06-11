@@ -8,7 +8,7 @@ var rssFiles = new List<FeedFile>
     new("Bloggen", @"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\rss.xml", false, false),
     new("YouTube (Veckans Hesselbom)", @"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\veckanshesselbom_rss.xml", true, false),
     new("Teknikbloggen", @"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\winsoft.xml", false, false),
-    new("Podcast (Inte en singel)", @"C:\Users\hbom\OneDrive\InteEnSingel\Output\rss.xml", true, true),
+    //w("Podcast (Inte en singel)", @"C:\Users\hbom\OneDrive\InteEnSingel\Output\rss.xml", true, true),
     new("Podcast (Blev det en klassiker?)", @"C:\Users\hbom\OneDrive\BlevDetEnKlassiker\Output\rss.xml", true, true),
     new("YouTube (Flimmer Duo)", @"C:\Users\hbom\OneDrive\80tal\Output\feed\tag\flimmer-duo.xml", true, false)
 };
