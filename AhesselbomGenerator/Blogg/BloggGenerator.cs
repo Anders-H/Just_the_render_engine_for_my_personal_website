@@ -29,25 +29,16 @@ public class BloggGenerator
     public BloggGenerator(string filename, int max)
     {
         _tempComment = "";
-
-        _filename = filename.StartsWith("http")
-            ? filename
-            : Path.Combine(Config.SourceDirectory, filename);
-
+        _filename = filename.StartsWith("http") ? filename : Path.Combine(Config.SourceDirectory, filename);
         _temp = Path.Combine(Path.GetTempPath(), "temp.xml");
-
         _max = max;
     }
 
     public string Generate(bool full) =>
-        full
-            ? GenerateFull()
-            : GenerateHeadersList();
+        full ? GenerateFull() : GenerateHeadersList();
 
     public string Generate(bool full, int skip) =>
-        full
-            ? GenerateFull(skip)
-            : GenerateHeadersList(skip);
+        full ? GenerateFull(skip) : GenerateHeadersList(skip);
 
     private string GenerateFull(int skip = 0)
     {
@@ -118,16 +109,16 @@ public class BloggGenerator
             var link = item.SelectSingleNode("link")?.InnerText ?? "";
             var header = item.SelectSingleNode("title")?.InnerText ?? "";
             var dateString = ToDateString(item.SelectSingleNode("pubDate")?.InnerText);
-            dateString = string.IsNullOrEmpty(dateString) ? "" : $"<br /><i>{dateString}</i>";
+            dateString = string.IsNullOrEmpty(dateString) ? "" : $"<br><i>{dateString}</i>";
 
             s.AppendLine($@"<p><b><a href=""{link}"">{header}</a></b>{dateString}</p>");
             var text = item.SelectSingleNode("description")?.InnerText ?? "";
-            text = text.Replace("<br />", "<br /><br />");
-            text = text.Replace("<br /><br /><br /><br />", "<br /><br />");
-            text = text.Replace("<br /><br /><br /><br />", "<br /><br />");
-            text = text.Replace("<br /><br /><br />", "<br /><br />");
-            text = text.Replace("<br /><br /><blockquote", "<br /><blockquote");
-            text = text.Replace("</i><br /><br /><i><br /><br /></i>", "</i><br /><br />");
+            text = text.Replace("<br>", "<br><br>");
+            text = text.Replace("<br><br><br><br>", "<br><br>");
+            text = text.Replace("<br><br><br><br>", "<br><br>");
+            text = text.Replace("<br><br><br>", "<br><br>");
+            text = text.Replace("<br><br><blockquote", "<br><blockquote");
+            text = text.Replace("</i><br><br><i><br><br></i>", "</i><br><br>");
 
             const string moreSymbol = "[&#8230;]";
 
@@ -145,21 +136,21 @@ public class BloggGenerator
             var itemComments = comments.GetCommentsFromUrl(link);
             if (itemComments.Count > 0)
             {
-                s.Append($@"<p><b style=""color: #777777; font-size: smaller;"">{(itemComments.Count == 1 ? "1 kommentar:" : $"{itemComments.Count} kommentarer")}</b><br />");
+                s.Append($@"<p><b style=""color: #777777; font-size: smaller;"">{(itemComments.Count == 1 ? "1 kommentar:" : $"{itemComments.Count} kommentarer")}</b><br>");
                 
                 foreach (var c in itemComments)
                 {
                     s.Append(c.GetHtml());
 
                     if (c != itemComments.Last())
-                        s.Append("<br />");
+                        s.Append("<br>");
                 }
 
                 s.Append("</p>");
             }
         }
 
-        return s.ToString().Replace("<br /><br />", "<br />");
+        return s.ToString().Replace("<br><br>", "<br>");
     }
 
     public string GetLastBlogHeaderUrl()
@@ -273,7 +264,7 @@ public class BloggGenerator
             count++;
 
             if (added)
-                s.Append("<br />");
+                s.Append("<br>");
 
             var dateString = ToDateString(item.SelectSingleNode("pubDate")?.InnerText);
             dateString = string.IsNullOrEmpty(dateString) ? "" : $@" <span style=""font-weight: normal; color: #444444; font-size: smaller"">({dateString})</span>";

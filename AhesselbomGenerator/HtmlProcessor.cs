@@ -112,17 +112,17 @@ public class HtmlProcessor
             if (x.IndexOf('|') >= 0)
             {
                 var parts = x.Split('|');
-                return $@"<p class=""instaParagraph""><a href=""https://www.instagram.com/p/{parts[0]}/"" target=""_blank""><img src=""{parts[0]}.jpg"" alt=""{parts[1]}"" title=""{parts[1]}"" class=""instaImage"" /></a></p>";
+                return $@"<p class=""instaParagraph""><a href=""https://www.instagram.com/p/{parts[0]}/"" target=""_blank""><img src=""{parts[0]}.jpg"" alt=""{parts[1]}"" title=""{parts[1]}"" class=""instaImage""></a></p>";
             }
 
-            return $@"<p class=""instaParagraph""><a href=""https://www.instagram.com/p/{x}/"" target=""_blank""><img src=""{x}.jpg"" class=""instaImage"" /></a></p>";
+            return $@"<p class=""instaParagraph""><a href=""https://www.instagram.com/p/{x}/"" target=""_blank""><img src=""{x}.jpg"" class=""instaImage""></a></p>";
         }
 
         if (row.StartsWith("<!--LocalYouTube:"))
         {
             var x = row.ExtractValue();
             return $@"<p class=""instaParagraph"">
-<a href=""https://www.youtube.com/watch?v={x}"" target=""_blank""><img src=""{x}.jpg"" style="""" /></a>
+<a href=""https://www.youtube.com/watch?v={x}"" target=""_blank""><img src=""{x}.jpg""></a>
 </p>";
         }
 

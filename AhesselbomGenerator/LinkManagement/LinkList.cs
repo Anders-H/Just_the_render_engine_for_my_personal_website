@@ -39,7 +39,7 @@ public class LinkList : List<Link>
             s.AppendLine(link.GenerateLink());
 
             if (link != this.Last())
-                s.Append("<br />");
+                s.Append("<br>");
         }
 
         return s.ToString();

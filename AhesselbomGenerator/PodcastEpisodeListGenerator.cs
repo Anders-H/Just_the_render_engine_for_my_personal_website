@@ -58,9 +58,9 @@ public class PodcastEpisodeListGenerator
             var title = item.GetText("title");
 
             if (title.StartsWith("Avsnitt ", StringComparison.CurrentCultureIgnoreCase))
-                s.Append($"<b>{item.GetText("title")}</b><br />");
+                s.Append($"<b>{item.GetText("title")}</b><br>");
             else
-                s.Append($"<b>Avsnitt {avsnitt}: {item.GetText("title")}</b><br />");
+                s.Append($"<b>Avsnitt {avsnitt}: {item.GetText("title")}</b><br>");
 
             var mp3 = item.SelectNode("enclosure")!.GetAttributeValue("url");
             

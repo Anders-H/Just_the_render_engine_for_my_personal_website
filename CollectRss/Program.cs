@@ -18,7 +18,7 @@ var items = new List<Item>();
 
 foreach (var f in rssFiles)
 {
-    var xmlList = f.GetItems(30);
+    var xmlList = f.GetItems(5);
 
     foreach (var xmlElement in xmlList)
     {
@@ -128,7 +128,7 @@ public class Item
         NewTab ? $@"<a href=""{Url}"" target=""_blank"">" : $@"<a href=""{Url}"">";
 
     public string DateString =>
-        IncludeTime ? Date.ToString("yyyy-MM-dd hh:mm") : Date.ToString("yyyy-MM-dd");
+        Date.ToString("yyyy-MM-dd");
 
     private string TwitterHeader =>
         Header.Length > 50 ? Header.Substring(0, 45).Trim() + "..." : Header;
@@ -145,7 +145,7 @@ public class Item
                 s.Append(OpenAnchor);
                 s.Append($@"<img src=""./img/x.png"" alt=""X (Twitter)"" style=""width: 15px; height: 15px;""> <b>{TwitterHeader}</b>");
                 s.Append("</a>");
-                s.Append($"<br/><i>{DateString}</i>");
+                s.Append($"<br><i>{DateString}</i>");
                 s.Append("</p>");
                 s.Append("<p>");
                 s.Append(Header);
@@ -175,7 +175,7 @@ public class Item
                 s.Append(OpenAnchor);
                 s.Append($@"<img src=""./img/{icon}.png"" alt=""{FeedName}"" style=""width: 15px; height: 15px;""> <b>{Header}</b>");
                 s.Append("</a>");
-                s.Append($"<br/><i>{DateString}</i>");
+                s.Append($"<br><i>{DateString}</i>");
                 s.Append("</p>");
                 s.Append("<p>");
                 s.Append(text);
@@ -190,7 +190,7 @@ public class Item
                 s.Append(OpenAnchor);
                 s.Append($@"<i style=""font-weight: lighter;"">{FeedName}:</i> <b>{Header}</b>");
                 s.Append("</a>");
-                s.Append($"<br/><i>{DateString}</i>");
+                s.Append($"<br><i>{DateString}</i>");
                 s.Append("</p>");
                 s.Append("<p>");
                 s.Append(text);
