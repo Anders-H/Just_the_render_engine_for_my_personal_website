@@ -155,7 +155,7 @@ public class BloggGenerator
 
     public string GetLastBlogHeaderUrl()
     {
-        GetLast(out var address, out var header, out var shortText);
+        GetLast(out var address, out var header, out _);
         return $@"<a href=""{address}"">{header}</a>";
     }
 
@@ -164,12 +164,8 @@ public class BloggGenerator
         GenerateHeadersList(out address, out header, out shortText);
     }
 
-    private string GenerateHeadersList(int skip = 0)
-    {
-        var address = "";
-        var header = "";
-        return GenerateHeadersList(out address, out header, out _, skip);
-    }
+    private string GenerateHeadersList(int skip = 0) =>
+        GenerateHeadersList(out _, out _, out _, skip);
 
     private string GenerateHeadersList(out string address, out string header, out string shortText, int skip = 0)
     {

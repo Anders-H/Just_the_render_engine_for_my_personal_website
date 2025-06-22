@@ -90,6 +90,6 @@ var uploadProcessInfo = new ProcessStartInfo(@"D:\GitRepos\FtpMultiUpload\FtpMul
 };
 var uploadProcess = Process.Start(uploadProcessInfo);
 uploadProcess!.WaitForExit();
-uploadProcess!.Dispose();
+uploadProcess.Dispose();
 
 Console.WriteLine("Happy computer, good computer! Bye!");

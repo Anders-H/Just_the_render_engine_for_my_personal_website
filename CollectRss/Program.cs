@@ -141,9 +141,9 @@ public class Item
         switch (FeedName)
         {
             case "X (Twitter)":
-                s.Append("<p>");
+                s.Append(@"<p class=""startItemParagraph"">");
                 s.Append(OpenAnchor);
-                s.Append($@"<img src=""./img/x.png"" alt=""X (Twitter)"" style=""width: 15px; height: 15px;""> <b>{TwitterHeader}</b>");
+                s.Append($@"<img src=""./img/x.png"" alt=""X (Twitter)"" class=""startIcon""> <b class=""startHeader"">{TwitterHeader}</b>");
                 s.Append("</a>");
                 s.Append($"<br><i>{DateString}</i>");
                 s.Append("</p>");
@@ -157,6 +157,9 @@ public class Item
                 break;
             case "YouTube (Veckans Hesselbom)":
             case "YouTube (Flimmer Duo)":
+            case "Bloggen":
+            case "Teknikbloggen":
+            case "Podcast (Blev det en klassiker?)":
                 string icon;
 
                 switch (FeedName)
@@ -167,13 +170,22 @@ public class Item
                     case "YouTube (Flimmer Duo)":
                         icon = "flimmerduo";
                         break;
+                    case "Bloggen":
+                        icon = "bloggicon";
+                        break;
+                    case "Teknikbloggen":
+                        icon = "winsoft";
+                        break;
+                    case "Podcast (Blev det en klassiker?)":
+                        icon = "mic";
+                        break;
                     default:
                         throw new SystemException("You suck!");
                 }
 
-                s.Append("<p>");
+                s.Append(@"<p class=""startItemParagraph"">");
                 s.Append(OpenAnchor);
-                s.Append($@"<img src=""./img/{icon}.png"" alt=""{FeedName}"" style=""width: 15px; height: 15px;""> <b>{Header}</b>");
+                s.Append($@"<img src=""./img/{icon}.png"" alt=""{FeedName}"" class=""startIcon""> <b class=""startHeader"">{Header}</b>");
                 s.Append("</a>");
                 s.Append($"<br><i>{DateString}</i>");
                 s.Append("</p>");
@@ -186,9 +198,9 @@ public class Item
                 s.Append("</p>");
                 break;
             default:
-                s.Append("<p>");
+                s.Append(@"<p class=""startItemParagraph"">");
                 s.Append(OpenAnchor);
-                s.Append($@"<i style=""font-weight: lighter;"">{FeedName}:</i> <b>{Header}</b>");
+                s.Append($@"<i style=""font-weight: lighter;"">{FeedName}:</i> <b class=""startHeader"">{Header}</b>");
                 s.Append("</a>");
                 s.Append($"<br><i>{DateString}</i>");
                 s.Append("</p>");
