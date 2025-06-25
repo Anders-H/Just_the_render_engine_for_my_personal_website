@@ -133,6 +133,18 @@ public class HtmlProcessor
             return youTube.Html;
         }
 
+        if (row.StartsWith("<!--YouTubeLongList:"))
+        {
+            var youTube = new YouTubeListGenerator(row.ExtractValue()).GenerateLong();
+            return youTube.Html;
+        }
+        
+        if (row.StartsWith("<!--YouTubeShortList:"))
+        {
+            var youTube = new YouTubeListGenerator(row.ExtractValue()).GenerateShort();
+            return youTube.Html;
+        }
+
         if (row.StartsWith("<!--BloggRss:"))
             return new BloggGenerator(row.ExtractValue()).Generate(true);
 

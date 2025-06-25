@@ -75,4 +75,89 @@ public class YouTubeListGenerator
 
         return new YouTubeListGeneratorResult(html.ToString(), rss.ToString());
     }
+
+    public YouTubeListGeneratorResult GenerateLong()
+    {
+        var rss = Generate().Rss;
+        var html = new StringBuilder();
+        var rows = Regex.Split(FileReader.GetTextFileContent(_filename), @"\n");
+        html.AppendLine(@"<table border=""0"" cellspacing=""0"" cellpadding=""0"">");
+        var eachOther = false;
+        var count = 0;
+
+        foreach (var row in rows)
+        {
+            if (string.IsNullOrWhiteSpace(row) || row.IndexOf('|') < 0)
+                continue;
+
+            var parts = row.Split('|');
+
+            if (parts.Length < 3)
+                continue;
+
+            count++;
+            eachOther = !eachOther;
+            var pubDateParts = parts[2].Split('-');
+            var year = int.Parse(pubDateParts[0]);
+            var m = int.Parse(pubDateParts[1]);
+            var day = int.Parse(pubDateParts[2]);
+            var dt = new DateTime(year, m, day);
+            html.Append("<tr>");
+            html.Append($@"<td class=""ytdate {(eachOther ? "r1" : "r2")}"" style=""white-space: nowrap;"">{dt.ToShortDateString()}</td>");
+            html.Append($@"<td class=""ytlink {(eachOther ? "r1" : "r2")}""><a href=""https://www.youtube.com/watch?v={parts[0]}"" target=""_blank"">{parts[1]}</a></td>");
+            html.Append("</tr>");
+
+            if (count == 1 && parts.Length > 3)
+            {
+                html.Append("<tr>");
+                html.Append(@"<td colspan=""2"">");
+                html.Append(parts[3]);
+                html.Append("</td>");
+                html.Append("</tr>");
+            }
+        }
+
+        html.Append("</table>");
+        return new YouTubeListGeneratorResult(html.ToString(), rss);
+    }
+
+    public YouTubeListGeneratorResult GenerateShort()
+    {
+        var rss = Generate().Rss;
+        var html = new StringBuilder();
+        var rows = Regex.Split(FileReader.GetTextFileContent(_filename), @"\n");
+        html.AppendLine(@"<table border=""0"" cellspacing=""0"" cellpadding=""0"">");
+        var eachOther = false;
+        var count = 0;
+
+        foreach (var row in rows)
+        {
+            if (string.IsNullOrWhiteSpace(row) || row.IndexOf('|') < 0)
+                continue;
+
+            var parts = row.Split('|');
+
+            if (parts.Length < 3)
+                continue;
+
+            count++;
+            eachOther = !eachOther;
+            var pubDateParts = parts[2].Split('-');
+            var year = int.Parse(pubDateParts[0]);
+            var m = int.Parse(pubDateParts[1]);
+            var day = int.Parse(pubDateParts[2]);
+            var dt = new DateTime(year, m, day);
+
+            html.Append("<tr>");
+            html.Append($@"<td class=""ytdate {(eachOther ? "r1" : "r2")}"" style=""white-space: nowrap;"">{dt.ToShortDateString()}</td>");
+            html.Append($@"<td class=""ytlink {(eachOther ? "r1" : "r2")}""><a href=""https://www.youtube.com/watch?v={parts[0]}"" target=""_blank"">{parts[1]}</a></td>");
+            html.Append("</tr>");
+
+            if (count >= 10)
+                break;
+        }
+
+        html.Append("</table>");
+        return new YouTubeListGeneratorResult(html.ToString(), rss);
+    }
 }
