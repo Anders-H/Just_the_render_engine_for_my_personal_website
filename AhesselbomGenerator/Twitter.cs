@@ -17,7 +17,7 @@ public class Twitter
         const string take5Sql = $"SELECT TOP 5 {fields} FROM dbo.Tweet ORDER BY [Date] DESC";
         var cmd = new SqlCommand(skip5 ? skip5Sql : take5Sql, cn);
         var r = cmd.ExecuteReader();
-        s.Append(@"<p><a href=""https://x.com/ahesselbom"" target=""_blank"">Följ mig på X (Twitter)</a></p>");
+        s.Append(@"<h3><a href=""https://x.com/ahesselbom"" target=""_blank"">Följ mig på X (Twitter)</a></h3>");
         s.AppendLine("<p>");
         var count = 0;
 
