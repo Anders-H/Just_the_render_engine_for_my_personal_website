@@ -25,7 +25,7 @@ foreach (var inputFile in inputFiles)
 var sortedComments = commentList.OrderByDescending(x => x.PublishedTime).ToList();
 
 using var sw = new StreamWriter(outputFile, Encoding.UTF8, options);
-sw.WriteLine(@"<div class=""card"">");
+sw.WriteLine(@"<div style=""width: 95%;"">");
 sw.WriteLine("<h3>Svar</h3>");
 var count = 0;
 
