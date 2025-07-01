@@ -157,6 +157,9 @@ public class HtmlProcessor
         if (row.StartsWith("<!--BloggRssHeaders:"))
             return new BloggGenerator(row.ExtractValue()).Generate(false);
 
+        if (row.StartsWith("<!--BloggRssHeaders5:"))
+            return new BloggGenerator(row.ExtractValue(), 5).Generate(false);
+
         if (row.StartsWith("<!--LastBlogHeader:"))
             return new BloggGenerator(row.ExtractValue()).GetLastBlogHeaderUrl();
 
