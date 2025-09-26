@@ -48,11 +48,16 @@ foreach (var f in rssFiles)
 var sortedItems = new List<Item>();
 sortedItems.AddRange(items.OrderByDescending(x => x.Date));
 using var streamWriter = new StreamWriter(output, Encoding.UTF8, new FileStreamOptions { Access = FileAccess.Write, Mode = FileMode.Create});
+var bail = 0;
 
 foreach (var item in sortedItems)
 {
+    bail++;
     Console.WriteLine($"Writing from {item.FeedName} created at {item.Date.ToShortDateString()} {item.Date.ToShortTimeString()}.");
     streamWriter.WriteLine(item.GetHtml());
+
+    if (bail>=25)
+        break;
 }
 
 streamWriter.Flush();
