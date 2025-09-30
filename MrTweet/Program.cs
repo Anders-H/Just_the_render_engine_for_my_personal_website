@@ -78,7 +78,7 @@ cmdSave.ExecuteNonQuery();
 cn.Close();
 
 Console.WriteLine("Generating https://ahesselbom.se/...");
-var renderProcess = Process.Start(@"D:\GitRepos\Just_the_render_engine_for_my_personal_website\AhesselbomGenerator\bin\Release\net8.0-windows\AhesselbomGenerator.exe");
+var renderProcess = Process.Start(@"D:\GitRepos\Just_the_render_engine_for_my_personal_website\AhesselbomGenerator\bin\Release\net10.0-windows7.0\AhesselbomGenerator.exe");
 renderProcess.WaitForExit();
 renderProcess.Dispose();
 
