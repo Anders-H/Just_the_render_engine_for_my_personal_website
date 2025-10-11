@@ -16,7 +16,13 @@ public class HtmlProcessor
     private string? _lastTweet;
     private string Source { get; }
     private string Destination { get; set; }
+    private static bool YouTubeSaved { get; set; }
     public string Upload { get; private set; }
+
+    static HtmlProcessor()
+    {
+        YouTubeSaved = false;
+    }
 
     public HtmlProcessor(string source)
     {
@@ -129,13 +135,26 @@ public class HtmlProcessor
         if (row.StartsWith("<!--YouTubeList:"))
         {
             var youTube = new YouTubeListGenerator(row.ExtractValue()).Generate();
-            File.WriteAllText("C:\\Users\\hbom\\OneDrive\\ahesselbom.se2\\Output\\rss\\veckanshesselbom_rss.xml", youTube.Rss);
+
+            if (!YouTubeSaved)
+            {
+                File.WriteAllText("C:\\Users\\hbom\\OneDrive\\ahesselbom.se2\\Output\\rss\\veckanshesselbom_rss.xml", youTube.Rss);
+                YouTubeSaved = true;
+            }
+                
             return youTube.Html;
         }
 
         if (row.StartsWith("<!--YouTubeLongList:"))
         {
             var youTube = new YouTubeListGenerator(row.ExtractValue()).GenerateLong();
+
+            if (!YouTubeSaved)
+            {
+                File.WriteAllText("C:\\Users\\hbom\\OneDrive\\ahesselbom.se2\\Output\\rss\\veckanshesselbom_rss.xml", youTube.Rss);
+                YouTubeSaved = true;
+            }
+
             return youTube.Html;
         }
         

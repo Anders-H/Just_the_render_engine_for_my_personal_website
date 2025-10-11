@@ -137,7 +137,7 @@ public class YouTubeListGenerator
 
             var parts = row.Split('|');
 
-            if (parts.Length < 3)
+            if (parts.Length < 5)
                 continue;
 
             count++;
