@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AhesselbomGenerator.Blogg;
+using AhesselbomGenerator.HallOfFame;
+using AhesselbomGenerator.LinkManagement;
+using AhesselbomGenerator.Menu;
+using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using AhesselbomGenerator.Blogg;
-using AhesselbomGenerator.HallOfFame;
-using AhesselbomGenerator.LinkManagement;
 
 namespace AhesselbomGenerator;
 
@@ -192,31 +193,10 @@ public class HtmlProcessor
             return new BreadcrumbGenerator(row.ExtractValue()).Generate();
 
         if (row.StartsWith("<!--Menu:"))
-        {
-            var v = row.ExtractValue();
-            var result = FileReader.GetTextFileContent(Path.Combine(s, "menu.txt"));
+            return new MenuHtmlProcessor(row.ExtractValue()).GenerateMenu(s);
 
-            if (v.Contains(':'))
-            {
-                // Vi har hittat en submeny. Behåll förälderns submenyer.
-
-                var arr = v.Split(':');
-                var parent = arr[0];
-                result = new MenuProcessor(result).RemoveSubmenusExceptFor(parent);
-            }
-            else
-            {
-                // En huvudmeny. Behåll egna submenyer.
-                result = new MenuProcessor(result)
-                    .RemoveSubmenusExceptFor(v);
-            }
-
-            // Markera det egna menyalternativet.
-            result = result.Replace($"<<{v}>>", " selected");
-            result = Regex.Replace(result, "<<[A-Za-z:]*>>", "");
-
-            return result;
-        }
+        if (row.StartsWith("<!--TopMenu:"))
+            return new MenuHtmlProcessor(row.ExtractValue()).GenerateTopMenu(s);
 
         if (row.StartsWith("<!--Menu-->"))
         {
