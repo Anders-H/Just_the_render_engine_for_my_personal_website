@@ -47,13 +47,16 @@ foreach (var f in rssFiles)
 
 var sortedItems = new List<Item>();
 sortedItems.AddRange(items.OrderByDescending(x => x.Date));
-using var streamWriter = new StreamWriter(output, Encoding.UTF8, new FileStreamOptions { Access = FileAccess.Write, Mode = FileMode.Create});
+var fileStreamOptions = new FileStreamOptions { Access = FileAccess.Write, Mode = FileMode.Create };
+using var streamWriter = new StreamWriter(output, Encoding.UTF8, fileStreamOptions);
 var bail = 0;
 
 foreach (var item in sortedItems)
 {
     bail++;
-    Console.WriteLine($"Writing from {item.FeedName} created at {item.Date.ToShortDateString()} {item.Date.ToShortTimeString()}.");
+    var date = item.Date.ToShortDateString();
+    var time = item.Date.ToShortTimeString();
+    Console.WriteLine($"Writing from {item.FeedName} created at {date} {time}.");
     streamWriter.WriteLine(item.GetHtml());
 
     if (bail>=25)
@@ -129,8 +132,14 @@ public class Item
         Url = url;
     }
 
-    public string OpenAnchor =>
-        NewTab ? $@"<a href=""{Url}"" target=""_blank"">" : $@"<a href=""{Url}"">";
+    public string GetOpenAnchor(string className)
+    {
+        var cls = string.IsNullOrWhiteSpace(className) ? "" : $@" class=""{className}""";
+        
+        return NewTab
+            ? $@"<a{cls} href=""{Url}"" target=""_blank"">"
+            : $@"<a{cls} href=""{Url}"">";
+    }
 
     public string DateString =>
         Date.ToString("yyyy-MM-dd");
@@ -141,13 +150,14 @@ public class Item
     public string GetHtml()
     {
         var s = new StringBuilder();
+        var addVisaInlagg = Text.IndexOf("[&#8230;]") < 0;
         var text = Text.Replace("[&#8230;]", $@"<a href=""{Url}"">[&#8230;]</a>");
 
         switch (FeedName)
         {
             case "X (Twitter)":
                 s.Append(@"<p class=""startItemParagraph"">");
-                s.Append(OpenAnchor);
+                s.Append(GetOpenAnchor("startHeaderLink"));
                 s.Append($@"<img src=""./img/x.png"" alt=""X (Twitter)"" class=""startIcon""> <b class=""startHeader"">{TwitterHeader}</b>");
                 s.Append("</a>");
                 s.Append($"<br><i>{DateString}</i>");
@@ -155,7 +165,7 @@ public class Item
                 s.Append("<p>");
                 s.Append(Header);
                 s.Append(" ");
-                s.Append(OpenAnchor);
+                s.Append(GetOpenAnchor(""));
                 s.Append("Visa inlägg");
                 s.Append("</a>");
                 s.Append("</p>");
@@ -189,22 +199,27 @@ public class Item
                 }
 
                 s.Append(@"<p class=""startItemParagraph"">");
-                s.Append(OpenAnchor);
+                s.Append(GetOpenAnchor("startHeaderLink"));
                 s.Append($@"<img src=""./img/{icon}.png"" alt=""{FeedName}"" class=""startIcon""> <b class=""startHeader"">{Header}</b>");
                 s.Append("</a>");
                 s.Append($"<br><i>{DateString}</i>");
                 s.Append("</p>");
                 s.Append("<p>");
                 s.Append(text);
-                s.Append(" ");
-                s.Append(OpenAnchor);
-                s.Append(Url);
-                s.Append("</a>");
+                
+                if (addVisaInlagg)
+                {
+                    s.Append(" ");
+                    s.Append(GetOpenAnchor(""));
+                    s.Append(Url);
+                    s.Append("</a>");
+                }
+
                 s.Append("</p>");
                 break;
             default:
                 s.Append(@"<p class=""startItemParagraph"">");
-                s.Append(OpenAnchor);
+                s.Append(GetOpenAnchor("startHeaderLink"));
                 s.Append($@"<i style=""font-weight: lighter;"">{FeedName}:</i> <b class=""startHeader"">{Header}</b>");
                 s.Append("</a>");
                 s.Append($"<br><i>{DateString}</i>");

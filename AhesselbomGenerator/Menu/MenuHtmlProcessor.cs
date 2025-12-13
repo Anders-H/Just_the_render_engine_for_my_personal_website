@@ -77,6 +77,13 @@ public class MenuHtmlProcessor
             foreach (var subItem in subItems)
             {
                 var i = subItem.Replace("&nbsp;", "");
+
+                i = i.Replace("Blev det en klassiker?", "Klassiker?");
+                i = i.Replace("Inte en singel", "Singel");
+                i = i.Replace("Radio Houdi", "Houdi");
+                i = i.Replace("Stulet index", "Stöldindex");
+                i = i.Replace("Hesselbom/Sahlström", "Sahlström");
+
                 s.Append($"<li>{i}</li>");
             }
 
