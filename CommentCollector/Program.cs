@@ -45,6 +45,7 @@ return;
 
 IEnumerable<Comment> GetComments(string filePath)
 {
+    CheckFileIsXml(filePath);
     using var sr = new StreamReader(filePath);
     var xml = sr.ReadToEnd();
     sr.Close();
@@ -74,6 +75,34 @@ IEnumerable<Comment> GetComments(string filePath)
     }
     
     return comments;
+}
+
+static void CheckFileIsXml(string filename)
+{
+    var content = "";
+
+    using (var sr = new StreamReader(filename))
+    {
+        content = sr.ReadToEnd().Trim();
+        sr.Close();
+    }
+
+    if (content.StartsWith("<?xml"))
+        return;
+
+    var xmlStart = content.IndexOf("<?xml", StringComparison.Ordinal);
+
+    if (xmlStart == -1)
+        throw new Exception($"File {filename} is not valid XML.");
+
+    content = content[xmlStart..].Trim();
+
+    using (var sw = new StreamWriter(filename, false, Encoding.UTF8))
+    {
+        sw.Write(content);
+        sw.Flush();
+        sw.Close();
+    }
 }
 
 DateTime? ToDateTime(string? feedDate)

@@ -35,6 +35,8 @@ foreach (var f in rssFiles)
 
         if (f.Name.StartsWith("Podcast"))
             date = new DateTime(date.Year, date.Month, date.Day, 10, 0, 0);
+        else if (f.Name.StartsWith("YouTube"))
+            date = date.AddDays(1);
 
         var header = xmlElement.SelectSingleNode("title")?.InnerText ?? "";
         var text = xmlElement.SelectSingleNode("description")?.InnerText ?? "";

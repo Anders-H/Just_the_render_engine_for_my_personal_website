@@ -313,8 +313,38 @@ public class HtmlProcessor
 
     private void GetLastBlogAddress(out string lastBlogAddress, out string lastBlogHeader, out string lastBlogShortText)
     {
-        var bloggGenerator = new BloggGenerator(@"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\rss.xml");
+        const string rssFilename = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\rss.xml";
+        CheckFileIsXml(rssFilename);
+        var bloggGenerator = new BloggGenerator(rssFilename);
         bloggGenerator.GetLast(out lastBlogAddress, out lastBlogHeader, out lastBlogShortText);
+    }
+
+    private static void CheckFileIsXml(string filename)
+    {
+        var content = "";
+        
+        using (var sr = new StreamReader(filename))
+        {
+            content = sr.ReadToEnd().Trim();
+            sr.Close();
+        }
+
+        if (content.StartsWith("<?xml"))
+            return;
+
+        var xmlStart = content.IndexOf("<?xml", StringComparison.Ordinal);
+        
+        if (xmlStart == -1)
+            throw new Exception($"File {filename} is not valid XML.");
+
+        content = content[xmlStart..].Trim();
+        
+        using (var sw = new StreamWriter(filename, false, Encoding.UTF8))
+        {
+            sw.Write(content);
+            sw.Flush();
+            sw.Close();
+        }
     }
 
     private string GetLastTweet()
