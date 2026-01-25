@@ -267,6 +267,11 @@ public class HtmlProcessor
             return Twitter.GetTweetHtml(false);
         }
 
+        if (row == "<!--Home-->")
+        {
+
+        }
+
         throw new SystemException(row);
     }
 

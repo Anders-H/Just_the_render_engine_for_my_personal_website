@@ -210,6 +210,7 @@ public class BloggGenerator
         if (filename.StartsWith("http"))
         {
             FileReader.DownloadTextFile(filename, _temp);
+            CheckFileIsXml(_temp);
             dom.Load(_temp);
         }
         else
@@ -278,6 +279,34 @@ public class BloggGenerator
         }
 
         return s.ToString();
+    }
+
+    private static void CheckFileIsXml(string filename)
+    {
+        var content = "";
+
+        using (var sr = new StreamReader(filename))
+        {
+            content = sr.ReadToEnd().Trim();
+            sr.Close();
+        }
+
+        if (content.StartsWith("<?xml"))
+            return;
+
+        var xmlStart = content.IndexOf("<?xml", StringComparison.Ordinal);
+
+        if (xmlStart == -1)
+            throw new Exception($"File {filename} is not valid XML.");
+
+        content = content[xmlStart..].Trim();
+
+        using (var sw = new StreamWriter(filename, false, Encoding.UTF8))
+        {
+            sw.Write(content);
+            sw.Flush();
+            sw.Close();
+        }
     }
 
     public static string ToDateString(string? feedDate)

@@ -85,8 +85,18 @@ public class FeedFile
 
     public List<XmlElement> GetItems(int maxCount)
     {
+        CheckFileIsXml(Filename);
         var dom = new XmlDocument();
-        dom.Load(Filename);
+
+        try
+        {
+            dom.Load(Filename);
+        }
+        catch
+        {
+            System.Diagnostics.Debug.WriteLine(Filename);
+            throw;
+        }
 
         if (dom.DocumentElement == null)
             throw new SystemException($"Document element is null: {Name}");
@@ -110,6 +120,52 @@ public class FeedFile
         }
 
         return result;
+    }
+
+    private static void CheckFileIsXml(string filename)
+    {
+        string content;
+
+        using (var sr = new StreamReader(filename))
+        {
+            content = sr.ReadToEnd().Trim();
+            sr.Close();
+        }
+
+        content = RemoveIfNotStartsWithSmallerThan(content, filename);
+
+        if (content.StartsWith("<?xml"))
+            return;
+
+        var xmlStart = content.IndexOf("<?xml", StringComparison.Ordinal);
+
+        if (xmlStart == -1)
+        {
+            content = $@"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""no"" ?>
+{content}";
+        }
+
+        using var sw = new StreamWriter(filename, false, Encoding.UTF8);
+        sw.Write(content);
+        sw.Flush();
+        sw.Close();
+    }
+
+    private static string RemoveIfNotStartsWithSmallerThan(string content, string filename)
+    {
+        var index = content.IndexOf('<');
+
+        content = index switch
+        {
+            < 0 or 0 => content,
+            _ => content[index..]
+        };
+
+        using var sw = new StreamWriter(filename, false, Encoding.UTF8);
+        sw.Write(content);
+        sw.Flush();
+        sw.Close();
+        return content;
     }
 }
 
@@ -152,7 +208,7 @@ public class Item
     public string GetHtml()
     {
         var s = new StringBuilder();
-        var addVisaInlagg = Text.IndexOf("[&#8230;]") < 0;
+        var addVisaInlagg = Text.IndexOf("[&#8230;]", StringComparison.Ordinal) < 0;
         var text = Text.Replace("[&#8230;]", $@"<a href=""{Url}"">[&#8230;]</a>");
 
         switch (FeedName)
