@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using AhesselbomGenerator.Home;
 
 namespace AhesselbomGenerator;
 
@@ -18,11 +19,13 @@ public class HtmlProcessor
     private string Source { get; }
     private string Destination { get; set; }
     private static bool YouTubeSaved { get; set; }
+    private static readonly ISettings Settings;
     public string Upload { get; private set; }
 
     static HtmlProcessor()
     {
         YouTubeSaved = false;
+        Settings = new Settings();
     }
 
     public HtmlProcessor(string source)
@@ -139,7 +142,7 @@ public class HtmlProcessor
 
             if (!YouTubeSaved)
             {
-                File.WriteAllText("C:\\Users\\hbom\\OneDrive\\ahesselbom.se2\\Output\\rss\\veckanshesselbom_rss.xml", youTube.Rss);
+                File.WriteAllText($"{Settings.OutputBasePath}rss\\veckanshesselbom_rss.xml", youTube.Rss);
                 YouTubeSaved = true;
             }
                 
@@ -152,7 +155,7 @@ public class HtmlProcessor
 
             if (!YouTubeSaved)
             {
-                File.WriteAllText("C:\\Users\\hbom\\OneDrive\\ahesselbom.se2\\Output\\rss\\veckanshesselbom_rss.xml", youTube.Rss);
+                File.WriteAllText($"{Settings.OutputBasePath}rss\\veckanshesselbom_rss.xml", youTube.Rss);
                 YouTubeSaved = true;
             }
 
@@ -244,7 +247,7 @@ public class HtmlProcessor
         {
             var n = DateTime.Now;
             var date = $"{n:yyyy:MM:dd} {n:HH:mm}";
-            return $"<!-- Generated using the third generation of the Monkeybone engine at {date}. -->";
+            return $"<!-- Generated using the fourth generation of the Monkeybone engine at {date}, written by Anders Hesselbom. -->";
         }
 
         if (row.StartsWith("<!--Has:"))
@@ -260,8 +263,9 @@ public class HtmlProcessor
 
             if (row.StartsWith("<!--TwitterTop100"))
             {
-                File.WriteAllText("C:\\Users\\hbom\\OneDrive\\ahesselbom.se2\\Output\\rss\\ahesselbom_x_rss.xml", Twitter.GetTweetRssTop100());
-                return Twitter.GetTweetHtmlTop100();
+                var tweetRss = Twitter.GetTweetRssTop100();
+                File.WriteAllText($"{Settings.OutputBasePath}rss\\ahesselbom_x_rss.xml", tweetRss);
+                return tweetRss;
             }
 
             return Twitter.GetTweetHtml(false);
@@ -269,7 +273,9 @@ public class HtmlProcessor
 
         if (row == "<!--Home-->")
         {
-
+            var home = StartPageGenerator.GetStartPage(Settings);
+            File.WriteAllText($"{Settings.OutputBasePath}index.html", home);
+            return home;
         }
 
         throw new SystemException(row);

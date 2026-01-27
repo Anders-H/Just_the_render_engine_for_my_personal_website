@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using AhesselbomGenerator.Home;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 
@@ -14,6 +15,7 @@ var rssFiles = new List<FeedFile>
 };
 
 const string output = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Source\start_content.txt";
+const string outputHtml2026 = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Source\start_cards.txt";
 var items = new List<Item>();
 
 foreach (var f in rssFiles)
@@ -67,6 +69,59 @@ foreach (var item in sortedItems)
 
 streamWriter.Flush();
 streamWriter.Close();
+items = [];
+
+foreach (var f in rssFiles)
+{
+    var xmlList = f.GetItems(3);
+
+    foreach (var xmlElement in xmlList)
+    {
+        var dateString = xmlElement.SelectSingleNode("pubDate");
+
+        if (dateString == null)
+            throw new SystemException($"pubDate in {f.Name}");
+
+        const string parseFormat = "ddd, dd MMM yyyy HH:mm:ss zzz";
+        var dateStringValue = dateString.InnerText;
+        dateStringValue = dateStringValue.Replace(" GMT", " +0000");
+        Console.WriteLine(dateStringValue);
+        var date = DateTime.ParseExact(dateStringValue, parseFormat, CultureInfo.InvariantCulture);
+
+        if (f.Name.StartsWith("Podcast"))
+            date = new DateTime(date.Year, date.Month, date.Day, 10, 0, 0);
+        else if (f.Name.StartsWith("YouTube"))
+            date = date.AddDays(1);
+
+        var header = xmlElement.SelectSingleNode("title")?.InnerText ?? "";
+        var text = xmlElement.SelectSingleNode("description")?.InnerText ?? "";
+        var url = xmlElement.SelectSingleNode("link")?.InnerText ?? "";
+        Console.WriteLine($"Adding from {f.Name} created at {date.ToShortDateString()} {date.ToShortTimeString()}.");
+        var item = new Item(f.Name, f.NewTab, f.IncludeTime, date, header, text, url);
+        items.Add(item);
+    }
+}
+
+sortedItems = [];
+sortedItems.AddRange(items.OrderByDescending(x => x.Date));
+fileStreamOptions = new FileStreamOptions { Access = FileAccess.Write, Mode = FileMode.Create };
+using var streamWriter2 = new StreamWriter(outputHtml2026, Encoding.UTF8, fileStreamOptions);
+bail = 0;
+
+foreach (var item in sortedItems)
+{
+    bail++;
+    var date = item.Date.ToShortDateString();
+    var time = item.Date.ToShortTimeString();
+    Console.WriteLine($"Writing from {item.FeedName} created at {date} {time}.");
+    streamWriter2.WriteLine(item.GetHtml(StartPageGenerator.ItemTemplate));
+
+    if (bail >= 6)
+        break;
+}
+
+streamWriter2.Flush();
+streamWriter2.Close();
 
 public class FeedFile
 {
@@ -290,4 +345,16 @@ public class Item
 
         return s.ToString();
     }
+
+    public string GetHtml(string template) =>
+        FeedName switch
+        {
+            "X (Twitter)" => template.Replace("[A]", $"X (Twitter) {DateString}").Replace("[B]", Header).Replace("[C]", Url),
+            "YouTube (Veckans Hesselbom)" => template.Replace("[A]", $"YouTube (Veckans Hesselbom) {DateString}").Replace("[B]", Header).Replace("[C]", Url),
+            "YouTube (Flimmer Duo)" => template.Replace("[A]", $"YouTube (FlimmerDuo) {DateString}").Replace("[B]", Header).Replace("[C]", Url),
+            "Bloggen" => template.Replace("[A]", $"Bloggen {DateString}").Replace("[B]", Header).Replace("[C]", Url),
+            "Teknikbloggen" => template.Replace("[A]", $"Teknikbloggen {DateString}").Replace("[B]", Header).Replace("[C]", Url),
+            "Podcast (Blev det en klassiker?)" => template.Replace("[A]", $"Blev det en klassiker? {DateString}").Replace("[B]", Header).Replace("[C]", Url),
+            _ => template.Replace("[A]", $"{DateString}").Replace("[B]", Header).Replace("[C]", Url)
+        };
 }
