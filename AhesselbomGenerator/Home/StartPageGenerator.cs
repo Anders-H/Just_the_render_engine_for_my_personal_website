@@ -168,11 +168,11 @@ public class StartPageGenerator
     <ul class=""nav-links"">
         <li><a href=""https://ahesselbom.se/om/"">Om</a></li>
         <li><a href=""https://ahesselbom.se/texter/"">Texter</a></li>
-        <li><a href=""https://ahesselbom.se/youtube/"">YouTube</a></li>
+        <li><a class=""menuPrio1""href=""https://ahesselbom.se/youtube/"">YouTube</a></li>
         <li><a href=""https://ahesselbom.se/twitter/"">X</a></li>
-        <li><a href=""https://ahesselbom.se/podcast/"">Podcasts</a></li>
-        <li><a href=""https://ahesselbom.se/hall-of-fame/"">Hall of fame</a></li>
-        <li><a href=""https://ahesselbom.se/evolution/"">Evolution</a></li>
+        <li><a class=""menuPrio0""href=""https://ahesselbom.se/podcast/"">Podcasts</a></li>
+        <li><a class=""menuPrio2""href=""https://ahesselbom.se/hall-of-fame/"">Hall of fame</a></li>
+        <li><a class=""menuPrio3"" href=""https://ahesselbom.se/evolution/"">Evolution</a></li>
     </ul>
 </nav>
 
@@ -205,7 +205,7 @@ public class StartPageGenerator
     public const string ItemTemplate = @"<article class=""teaser"">
         <h3>[A]</h3>
         <p>[B]</p>
-        <a href=""[C]"">Läs mer</a>
+        <a href=""[C]""[D]>Läs mer</a>
     </article>";
 
     public static string GetStartPage(ISettings settings)

@@ -349,12 +349,12 @@ public class Item
     public string GetHtml(string template) =>
         FeedName switch
         {
-            "X (Twitter)" => template.Replace("[A]", $"X (Twitter) {DateString}").Replace("[B]", Header).Replace("[C]", Url),
-            "YouTube (Veckans Hesselbom)" => template.Replace("[A]", $"YouTube (Veckans Hesselbom) {DateString}").Replace("[B]", Header).Replace("[C]", Url),
-            "YouTube (Flimmer Duo)" => template.Replace("[A]", $"YouTube (FlimmerDuo) {DateString}").Replace("[B]", Header).Replace("[C]", Url),
-            "Bloggen" => template.Replace("[A]", $"Bloggen {DateString}").Replace("[B]", Header).Replace("[C]", Url),
-            "Teknikbloggen" => template.Replace("[A]", $"Teknikbloggen {DateString}").Replace("[B]", Header).Replace("[C]", Url),
-            "Podcast (Blev det en klassiker?)" => template.Replace("[A]", $"Blev det en klassiker? {DateString}").Replace("[B]", Header).Replace("[C]", Url),
-            _ => template.Replace("[A]", $"{DateString}").Replace("[B]", Header).Replace("[C]", Url)
+            "X (Twitter)" => template.Replace("[A]", $"X (Twitter) {DateString}").Replace("[B]", Header).Replace("[C]", Url).Replace("[D]", @" target=""_blank"""),
+            "YouTube (Veckans Hesselbom)" => template.Replace("[A]", $"YouTube (Veckans Hesselbom) {DateString}").Replace("[B]", Header).Replace("[C]", Url).Replace("[D]", @" target=""_blank"""),
+            "YouTube (Flimmer Duo)" => template.Replace("[A]", $"YouTube (FlimmerDuo) {DateString}").Replace("[B]", Header).Replace("[C]", Url).Replace("[D]", @" target=""_blank"""),
+            "Bloggen" => template.Replace("[A]", $"Bloggen {DateString}").Replace("[B]", Header).Replace("[C]", Url).Replace("[D]", ""),
+            "Teknikbloggen" => template.Replace("[A]", $"Teknikbloggen {DateString}").Replace("[B]", Header).Replace("[C]", Url).Replace("[D]", @" target=""_blank"""),
+            "Podcast (Blev det en klassiker?)" => template.Replace("[A]", $"Blev det en klassiker? {DateString}").Replace("[B]", Header).Replace("[C]", Url).Replace("[D]", @" target=""_blank"""),
+            _ => template.Replace("[A]", $"{DateString}").Replace("[B]", Header).Replace("[C]", Url).Replace("[D]", @" target=""_blank""")
         };
 }
