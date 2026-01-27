@@ -71,17 +71,20 @@ public class StartPageGenerator
             padding: 60px 20px;
             text-align: center;
             border-bottom: 1px solid #eee;
+            cursor: default;
         }
 
         header h1 {
             margin: 0;
             font-size: 2.5rem;
             color: #222;
+            cursor: default;
         }
 
         header p {
             font-size: 1.2rem;
             color: #666;
+            cursor: default;
         }
 
         .hero-image {
