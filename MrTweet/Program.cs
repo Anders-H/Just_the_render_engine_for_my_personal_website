@@ -9,12 +9,14 @@ const string tCert = "Trust Server Certificate=True";
 const string connectionString = $"{dSource};{dName};{iSecurity};{tCert}";
 using var cn = new SqlConnection(connectionString);
 cn.Open();
-using var cmdGetNewestTweets = new SqlCommand("SELECT TOP 3 [Text] FROM dbo.Tweet ORDER BY [Date] DESC", cn);
+using var cmdGetNewestTweets = new SqlCommand("SELECT TOP 3 [Date], [Text] FROM dbo.Tweet ORDER BY [Date] DESC", cn);
 var r = cmdGetNewestTweets.ExecuteReader();
 
 while (r.Read())
 {
-    Console.WriteLine(r.GetString(0));
+    var d = r.GetDateTime(0);
+    Console.WriteLine($"{d.ToShortDateString()} {d.ToShortTimeString()}");
+    Console.WriteLine(r.GetString(1));
     Console.WriteLine();
 }
 
@@ -26,8 +28,11 @@ var text = (Console.ReadLine() ?? "").Trim();
 if (string.IsNullOrEmpty(text))
     return;
 
-Console.Write("Date (YYYY-MM-DD, default is today): ");
+Console.Write("Date (YYYY-MM-DD, default is today, -1 is yesterday): ");
 var date = (Console.ReadLine() ?? "").Trim();
+
+if (date.Trim() == "-1")
+    date = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
 
 if (string.IsNullOrEmpty(date))
     date = DateTime.Now.ToString("yyyy-MM-dd");

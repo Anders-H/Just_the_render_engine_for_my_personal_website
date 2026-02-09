@@ -65,7 +65,6 @@ public class StartPageGenerator
             text-align: center;
             border-bottom: 1px solid #eee;
             cursor: default;
-            max-width: 1000px;
         }
         header h1 {
             margin: 0;
