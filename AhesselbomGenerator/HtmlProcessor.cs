@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using AhesselbomGenerator;
 using AhesselbomGenerator.Home;
 
 namespace AhesselbomGenerator;
@@ -288,7 +289,7 @@ public class HtmlProcessor
         throw new SystemException(row);
     }
 
-    private void Save(string content)
+    public void Save(string content)
     {
         var flatContent = Regex.Split(content, @"\n");
 
@@ -329,7 +330,7 @@ public class HtmlProcessor
         }
     }
 
-    private void GetLastBlogAddress(out string lastBlogAddress, out string lastBlogHeader, out string lastBlogShortText)
+    void GetLastBlogAddress(out string lastBlogAddress, out string lastBlogHeader, out string lastBlogShortText)
     {
         const string rssFilename = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\rss.xml";
         CheckFileIsXml(rssFilename);
@@ -337,7 +338,7 @@ public class HtmlProcessor
         bloggGenerator.GetLast(out lastBlogAddress, out lastBlogHeader, out lastBlogShortText);
     }
 
-    private static void CheckFileIsXml(string filename)
+    void CheckFileIsXml(string filename)
     {
         var content = "";
         
@@ -365,7 +366,7 @@ public class HtmlProcessor
         }
     }
 
-    private string GetLastTweet()
+    public string GetLastTweet()
     {
         return Twitter.GetLastTweet();
     }
