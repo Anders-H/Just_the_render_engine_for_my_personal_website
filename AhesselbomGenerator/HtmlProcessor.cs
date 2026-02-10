@@ -261,14 +261,12 @@ public class HtmlProcessor
             if (row.StartsWith("<!--TwitterSkip5"))
                 return Twitter.GetTweetHtml(true);
 
-            if (row.StartsWith("<!--TwitterTop100Html"))
-                return Twitter.GetTweetHtmlTop100();
-
             if (row.StartsWith("<!--TwitterTop100"))
             {
                 var tweetRss = Twitter.GetTweetRssTop100();
                 File.WriteAllText($"{Settings.OutputBasePath}rss\\ahesselbom_x_rss.xml", tweetRss);
-                return tweetRss;
+                var tweetHtml = Twitter.GetTweetHtmlTop100();
+                return tweetHtml;
             }
 
             return Twitter.GetTweetHtml(false);
