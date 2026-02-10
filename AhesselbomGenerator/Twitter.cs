@@ -32,7 +32,7 @@ public class Twitter
             count++;
 
             if (count <= 4)
-                s.AppendLine("<br><br>");
+                s.AppendLine("<br></br>");
         }
 
         s.AppendLine("</p>");

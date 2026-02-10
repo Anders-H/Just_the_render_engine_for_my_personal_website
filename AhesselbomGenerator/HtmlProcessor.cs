@@ -6,7 +6,6 @@ using System;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using AhesselbomGenerator;
 using AhesselbomGenerator.Home;
 
 namespace AhesselbomGenerator;
@@ -263,11 +262,7 @@ public class HtmlProcessor
                 return Twitter.GetTweetHtml(true);
 
             if (row.StartsWith("<!--TwitterTop100Html"))
-            {
-                var tweetRss = Twitter.GetTweetHtmlTop100();
-                File.WriteAllText($"{Settings.OutputBasePath}rss\\ahesselbom_x_rss.xml", tweetRss);
-                return tweetRss;
-            }
+                return Twitter.GetTweetHtmlTop100();
 
             if (row.StartsWith("<!--TwitterTop100"))
             {
@@ -340,7 +335,7 @@ public class HtmlProcessor
 
     void CheckFileIsXml(string filename)
     {
-        var content = "";
+        string content;
         
         using (var sr = new StreamReader(filename))
         {
