@@ -25,16 +25,16 @@ foreach (var inputFile in inputFiles)
 var sortedComments = commentList.OrderByDescending(x => x.PublishedTime).ToList();
 
 using var sw = new StreamWriter(outputFile, Encoding.UTF8, options);
-sw.WriteLine("<h2>Kommentarer</h2>");
 var count = 0;
 
 foreach (var comment in sortedComments)
 {
     count++;
-
+    sw.WriteLine(@"<article class=""teaser endTeaser""><h3>Kommentar</h3>");
     sw.WriteLine(comment.ToHtml());
-
-    if (count >= 5)
+    sw.WriteLine("</article>");
+    
+    if (count >= 2)
         break;
 }
 

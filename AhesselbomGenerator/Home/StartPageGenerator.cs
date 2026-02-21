@@ -4,14 +4,7 @@ namespace AhesselbomGenerator.Home;
 
 public class StartPageGenerator
 {
-    public const string Template = @"<!DOCTYPE html>
-<html lang=""sv"">
-<head>
-    <meta charset=""UTF-8"">
-    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-    <title>Anders Hesselbom</title>
-    <script src=""./today.js""></script>
-    <style>
+    public const string Css = @"
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -20,6 +13,7 @@ public class StartPageGenerator
             color: #333;
             line-height: 1.6;
         }
+
         nav {
             background-color: #ffffff;
             height: 60px;
@@ -32,33 +26,40 @@ public class StartPageGenerator
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
         }
+
         .nav-links {
             list-style: none;
             display: flex;
             margin: 0;
             padding: 0;
         }
+
         .nav-links li {
             margin-left: 20px;
         }
+
         .nav-links a {
             text-decoration: none;
             color: #555;
             font-size: 0.9rem;
             transition: color 0.3s;
         }
+
         .nav-links a:hover {
             color: #007BFF;
         }
+
         footer a {
             text-decoration: none;
             color: #555;
             font-size: 0.9rem;
             transition: color 0.3s;
         }
+
         footer a:hover {
             color: #007BFF;
         }
+
         header {
             background-color: #ffffff;
             padding: 60px 20px;
@@ -66,40 +67,27 @@ public class StartPageGenerator
             border-bottom: 1px solid #eee;
             cursor: default;
         }
+
         header h1 {
             margin: 0;
             font-size: 2.5rem;
             color: #222;
             cursor: default;
         }
+
         header p {
             font-size: 1.2rem;
             color: #666;
             cursor: default;
         }
-        .subcontent {
-            margin: 40px auto;
-            text-align: center;
-            padding: 0 20px;
-            font-size: 0.9rem;
-            color: #666;
-            max-width: 1000px;
-        }
-        .subcontent a {
-            text-decoration: none;
-            color: #007BFF;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-        .subcontent a:hover {
-            color: #007BFF;
-        }
+
         header h2 {
             margin: 0;
             font-size: 2.0rem;
             color: #222;
             cursor: default;
         }
+
         .hero-image {
             width: 100%;
             height: 400px;
@@ -107,6 +95,7 @@ public class StartPageGenerator
             background-size: cover;
             background-position: center;
         }
+
         .container {
             max-width: 1000px;
             margin: 40px auto;
@@ -115,6 +104,7 @@ public class StartPageGenerator
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
         }
+
         .teaser {
             background: #fff;
             padding: 20px;
@@ -127,13 +117,16 @@ public class StartPageGenerator
             height: 100%;
             box-sizing: border-box;
         }
+
         .teaser:hover {
             transform: translateY(-2px);
         }
+
         .teaser h3 {
             margin-top: 0;
             color: #444;
         }
+
         .teaser a {
             display: inline-block;
             margin-top: 10px;
@@ -143,35 +136,59 @@ public class StartPageGenerator
             margin-top: auto;
             padding-top: 15px;
         }
+
+        .endTeaser p {
+            display: inline;
+        }
+
+        .endTeaser a {
+            display: inline;
+        }
+
         footer {
             text-align: center;
-            padding: 40px;
+            padding: 5px 40px 45px 40px;
             font-size: 0.9rem;
             color: #999;
         }
+
         .logo {
             cursor: default;
         }
+
         @media screen and (max-width: 730px) {
             .menuPrio3 {
                 display: none;
             }
         }
+
         @media screen and (max-width: 660px) {
             .menuPrio2 {
                 display: none;
             }
         }
+
         @media screen and (max-width: 540px) {
             .menuPrio1 {
                 display: none;
             }
         }
+
         @media screen and (max-width: 440px) {
             .menuPrio0 {
                 display: none;
             }
-        }
+        }";
+
+    public const string Template = $@"<!DOCTYPE html>
+<html lang=""sv"">
+<head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>Anders Hesselbom</title>
+    <script src=""./today.js""></script>
+    <style>
+        {Css}
     </style>
 </head>
 <body>
@@ -198,15 +215,9 @@ public class StartPageGenerator
 
     <div class=""container"">
 [items]
-    </div>
-<div class=""subcontent"">
-<p>Om du läst ett bibelcitat på engelska och vill slå upp det på svenska, <a href=""https://politik-och-filosofi.ahesselbom.se/bibelns-bocker-pa-engelska/"">är det bra att veta vad motsvarande bok heter på svenska</a>.</p>
-<p>Folkbildning om <a href=""https://ahesselbom.se/publicservice/"">public service samlas här</a>.</p>
-<script>
-writeToday();
-</script>
+[today]
 [comments]
-</div>
+    </div>
     <footer>
         <a href=""https://ahesselbom.se/"">Hem</a>
         <span>&nbsp;|&nbsp;</span>
@@ -230,6 +241,19 @@ writeToday();
     public static string GetStartPage(ISettings settings)
     {
         var cards = File.ReadAllText($"{settings.InputBasePath}start_cards.txt");
-        return Template.Replace("[items]", cards).Replace("[comments]", FileReader.GetTextFileContent(Path.Combine(Config.SourceDirectory, "comments.txt")));
+
+        return Template.Replace("[items]", cards)
+            .Replace("[today]", GetToday())
+            .Replace("[comments]", FileReader.GetTextFileContent(Path.Combine(Config.SourceDirectory, "comments.txt")));
     }
+
+    private static string GetToday() =>
+        @"<article class=""teaser endTeaser"">
+            <h3>Idag</h3>
+            <p>Om du läst ett bibelcitat på engelska och vill slå upp det på svenska, <a href=""https://politik-och-filosofi.ahesselbom.se/bibelns-bocker-pa-engelska/"">är det bra att veta vad motsvarande bok heter på svenska.</a></p>
+            <p>Folkbildning om <a href=""https://ahesselbom.se/publicservice/"">public service samlas här.</a></p>
+            <script>
+                writeToday();
+            </script>
+        </article>";
 }
