@@ -4,192 +4,14 @@ namespace AhesselbomGenerator.Home;
 
 public class StartPageGenerator
 {
-    public const string Css = @"
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        nav {
-            background-color: #ffffff;
-            height: 60px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 5%;
-            position: sticky;
-            top: 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            margin: 0;
-            padding: 0;
-        }
-
-        .nav-links li {
-            margin-left: 20px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #555;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #007BFF;
-        }
-
-        footer a {
-            text-decoration: none;
-            color: #555;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-
-        footer a:hover {
-            color: #007BFF;
-        }
-
-        header {
-            background-color: #ffffff;
-            padding: 60px 20px;
-            text-align: center;
-            border-bottom: 1px solid #eee;
-            cursor: default;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            color: #222;
-            cursor: default;
-        }
-
-        header p {
-            font-size: 1.2rem;
-            color: #666;
-            cursor: default;
-        }
-
-        header h2 {
-            margin: 0;
-            font-size: 2.0rem;
-            color: #222;
-            cursor: default;
-        }
-
-        .hero-image {
-            width: 100%;
-            height: 400px;
-            background-image: url('./img/start_bg.jpg');
-            background-size: cover;
-            background-position: center;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .teaser {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-            transition: transform 0.4s;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            box-sizing: border-box;
-        }
-
-        .teaser:hover {
-            transform: translateY(-2px);
-        }
-
-        .teaser h3 {
-            margin-top: 0;
-            color: #444;
-        }
-
-        .teaser a {
-            display: inline-block;
-            margin-top: 10px;
-            text-decoration: none;
-            color: #007BFF;
-            font-weight: bold;
-            margin-top: auto;
-            padding-top: 15px;
-        }
-
-        .endTeaser p {
-            display: inline;
-        }
-
-        .endTeaser a {
-            display: inline;
-        }
-
-        footer {
-            text-align: center;
-            padding: 5px 40px 45px 40px;
-            font-size: 0.9rem;
-            color: #999;
-        }
-
-        .logo {
-            cursor: default;
-        }
-
-        @media screen and (max-width: 730px) {
-            .menuPrio3 {
-                display: none;
-            }
-        }
-
-        @media screen and (max-width: 660px) {
-            .menuPrio2 {
-                display: none;
-            }
-        }
-
-        @media screen and (max-width: 540px) {
-            .menuPrio1 {
-                display: none;
-            }
-        }
-
-        @media screen and (max-width: 440px) {
-            .menuPrio0 {
-                display: none;
-            }
-        }";
-
-    public const string Template = $@"<!DOCTYPE html>
+    public const string Template = @"<!DOCTYPE html>
 <html lang=""sv"">
 <head>
     <meta charset=""UTF-8"">
     <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
     <title>Anders Hesselbom</title>
     <script src=""./today.js""></script>
-    <style>
-        {Css}
-    </style>
+    <link rel=""stylesheet"" href=""./style5.css"">
 </head>
 <body>
 
@@ -229,6 +51,15 @@ public class StartPageGenerator
         <span>&nbsp;|&nbsp;</span>
         <a href=""https://filmtips.winsoft.se/"" target=""_blank"">Filmtips</a>
     </footer>
+<script>
+    const teaserGrid = document.querySelector('.container');
+    const hiddenTeaser = document.querySelector('.hide-on-two');
+
+    new ResizeObserver(() => {
+        const cols = getComputedStyle(teaserGrid).gridTemplateColumns.split(' ').length;
+        hiddenTeaser.style.display = cols === 2 ? 'none' : '';
+    }).observe(teaserGrid);
+</script>
 </body>
 </html>";
 
@@ -242,9 +73,20 @@ public class StartPageGenerator
     {
         var cards = File.ReadAllText($"{settings.InputBasePath}start_cards.txt");
 
-        return Template.Replace("[items]", cards)
+        var comments = Template.Replace("[items]", cards)
             .Replace("[today]", GetToday())
             .Replace("[comments]", FileReader.GetTextFileContent(Path.Combine(Config.SourceDirectory, "comments.txt")));
+
+        const string searchFor = "class=\"teaser endTeaser\"";
+        const string replaceWith = "class=\"teaser endTeaser hide-on-two\"";
+
+        var sistaIndex = comments.LastIndexOf(searchFor);
+
+        if (sistaIndex == -1)
+            return comments;
+
+        var modified = comments[..sistaIndex] + replaceWith + comments[(sistaIndex + searchFor.Length)..];
+        return modified;
     }
 
     private static string GetToday() =>

@@ -29,7 +29,9 @@ public class FileReader
 
     public static void DownloadTextFile(string source, string target)
     {
+#pragma warning disable SYSLIB0014
         using var client = new WebClient();
+#pragma warning restore SYSLIB0014
         client.DownloadFile(source, target);
     }
 }
