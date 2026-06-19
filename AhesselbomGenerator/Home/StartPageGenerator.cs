@@ -90,7 +90,7 @@ public class StartPageGenerator
     }
 
     private static string GetToday() =>
-        @"<article class=""teaser endTeaser"">
+        @"<article class=""teaser endTeaser idagTeaser"">
             <h3>Idag</h3>
             <p>Om du läst ett bibelcitat på engelska och vill slå upp det på svenska, <a href=""https://politik-och-filosofi.ahesselbom.se/bibelns-bocker-pa-engelska/"">är det bra att veta vad motsvarande bok heter på svenska.</a></p>
             <p>Folkbildning om <a href=""https://ahesselbom.se/publicservice/"">public service samlas här.</a></p>
