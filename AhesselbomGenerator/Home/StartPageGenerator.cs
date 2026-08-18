@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace AhesselbomGenerator.Home;
 
@@ -20,11 +21,11 @@ public class StartPageGenerator
     <ul class=""nav-links"">
         <li><a href=""https://ahesselbom.se/om/"">Om</a></li>
         <li><a href=""https://ahesselbom.se/texter/"">Texter</a></li>
-        <li><a class=""menuPrio1""href=""https://ahesselbom.se/youtube/"">YouTube</a></li>
+        <li class=""menuPrio1""><a href=""https://ahesselbom.se/youtube/"">YouTube</a></li>
         <li><a href=""https://ahesselbom.se/twitter/"">X</a></li>
-        <li><a class=""menuPrio0""href=""https://ahesselbom.se/podcast/"">Podcasts</a></li>
-        <li><a class=""menuPrio2""href=""https://ahesselbom.se/hall-of-fame/"">Hall of fame</a></li>
-        <li><a class=""menuPrio3"" href=""https://ahesselbom.se/evolution/"">Evolution</a></li>
+        <li class=""menuPrio0""><a href=""https://ahesselbom.se/podcast/"">Podcasts</a></li>
+        <li class=""menuPrio2""><a href=""https://ahesselbom.se/hall-of-fame/"">Hall of fame</a></li>
+        <li class=""menuPrio3""><a href=""https://ahesselbom.se/evolution/"">Evolution</a></li>
     </ul>
 </nav>
 
@@ -80,7 +81,7 @@ public class StartPageGenerator
         const string searchFor = "class=\"teaser endTeaser\"";
         const string replaceWith = "class=\"teaser endTeaser hide-on-two\"";
 
-        var sistaIndex = comments.LastIndexOf(searchFor);
+        var sistaIndex = comments.LastIndexOf(searchFor, StringComparison.CurrentCultureIgnoreCase);
 
         if (sistaIndex == -1)
             return comments;
