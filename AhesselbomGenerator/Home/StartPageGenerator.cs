@@ -16,18 +16,7 @@ public class StartPageGenerator
 </head>
 <body>
 
-<nav>
-    <div class=""logo"">https://ahesselbom.se/</div>
-    <ul class=""nav-links"">
-        <li><a href=""https://ahesselbom.se/om/"">Om</a></li>
-        <li><a href=""https://ahesselbom.se/texter/"">Texter</a></li>
-        <li class=""menuPrio1""><a href=""https://ahesselbom.se/youtube/"">YouTube</a></li>
-        <li><a href=""https://ahesselbom.se/twitter/"">X</a></li>
-        <li class=""menuPrio0""><a href=""https://ahesselbom.se/podcast/"">Podcasts</a></li>
-        <li class=""menuPrio2""><a href=""https://ahesselbom.se/hall-of-fame/"">Hall of fame</a></li>
-        <li class=""menuPrio3""><a href=""https://ahesselbom.se/evolution/"">Evolution</a></li>
-    </ul>
-</nav>
+[top-menu]
 
     <header>
         <h1>Anders Hesselbom</h1>
@@ -52,6 +41,27 @@ public class StartPageGenerator
         <span>&nbsp;|&nbsp;</span>
         <a href=""https://filmtips.winsoft.se/"" target=""_blank"">Filmtips</a>
     </footer>
+    <script>
+        const teaserGrid = document.querySelector('.container');
+        const endTeaser = teaserGrid?.querySelector('.endTeaser');
+
+        if (teaserGrid && endTeaser) {
+            const updateEndTeaserVisibility = () => {
+                const columnCount = getComputedStyle(teaserGrid)
+                    .gridTemplateColumns
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .length;
+                const teaserCount = teaserGrid.querySelectorAll('.teaser').length;
+
+                const isAloneOnLastRow = columnCount > 1 && teaserCount % columnCount === 1;
+                endTeaser.style.display = isAloneOnLastRow ? 'none' : '';
+            };
+
+            new ResizeObserver(updateEndTeaserVisibility).observe(teaserGrid);
+            updateEndTeaserVisibility();
+        }
+    </script>
 </body>
 </html>";
 
@@ -65,13 +75,33 @@ public class StartPageGenerator
     {
         var cards = File.ReadAllText($"{settings.InputBasePath}start_cards.txt");
 
-        return Template.Replace("[items]", cards)
+        var page = Template.Replace("[items]", cards)
+            .Replace("[top-menu]", new global::AhesselbomGenerator.Menu.MenuHtmlProcessor("").GenerateResponsiveTopMenu(Config.SourceDirectory, true))
             .Replace("[today]", GetToday())
             .Replace("[comments]", FileReader.GetTextFileContent(Path.Combine(Config.SourceDirectory, "comments-home.txt")));
+
+        return MarkLastTeaser(page);
+    }
+
+    private static string MarkLastTeaser(string page)
+    {
+        page = page.Replace("class=\"teaser endTeaser", "class=\"teaser");
+
+        const string teaserStart = "<article class=\"teaser";
+        var lastTeaser = page.LastIndexOf(teaserStart, StringComparison.Ordinal);
+
+        if (lastTeaser < 0)
+            return page;
+
+        var classEnd = page.IndexOf('"', lastTeaser + teaserStart.Length);
+
+        return classEnd < 0
+            ? page
+            : page.Insert(classEnd, " endTeaser");
     }
 
     private static string GetToday() =>
-        @"<article class=""teaser endTeaser idagTeaser"">
+        @"<article class=""teaser idagTeaser"">
             <h3>Idag</h3>
             <p>Om du läst ett bibelcitat på engelska och vill slå upp det på svenska, <a href=""https://politik-och-filosofi.ahesselbom.se/bibelns-bocker-pa-engelska/"">är det bra att veta vad motsvarande bok heter på svenska.</a></p>
             <p>Folkbildning om <a href=""https://ahesselbom.se/publicservice/"">public service samlas här.</a></p>

@@ -33,7 +33,7 @@ void WriteHomeComments(IEnumerable<Comment> comments)
 
     foreach (var comment in comments)
     {
-        sw.WriteLine(@"<article class=""teaser endTeaser""><h3>Kommentar</h3>");
+        sw.WriteLine(@"<article class=""teaser""><h3>Kommentar</h3>");
         sw.WriteLine(comment.ToHtml());
         sw.WriteLine("</article>");
     }

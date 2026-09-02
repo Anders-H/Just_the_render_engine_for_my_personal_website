@@ -16,6 +16,7 @@ public class HtmlProcessor
     private string? _lastBlogHeader;
     private string? _lastBlogShortText;
     private string? _lastTweet;
+    private string _menuSelection = "";
     private string Source { get; }
     private string Destination { get; set; }
     private static bool YouTubeSaved { get; set; }
@@ -41,6 +42,8 @@ public class HtmlProcessor
             return;
 
         var source = FileReader.GetTextFileContent(Source);
+        var menuMatch = Regex.Match(source, @"<!--Menu:(?<selection>[^>]+)-->");
+        _menuSelection = menuMatch.Success ? menuMatch.Groups["selection"].Value : "";
         var rows = Regex.Split(source, @"\n");
 
         var o = new StringBuilder();
@@ -214,6 +217,9 @@ public class HtmlProcessor
 
         if (row.StartsWith("<!--Menu26-->"))
             return new StaticMenuProcessor("").Generate();
+
+        if (row.StartsWith("<!--Include:top-menu.txt-->"))
+            return new MenuHtmlProcessor(_menuSelection).GenerateResponsiveTopMenu(s);
 
         if (row.StartsWith("<!--Include:"))
             return FileReader.GetTextFileContent(Path.Combine(s, row.ExtractValue()));
