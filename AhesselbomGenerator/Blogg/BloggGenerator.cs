@@ -134,19 +134,23 @@ public class BloggGenerator
 
             // Append comments, if any.
             var itemComments = comments.GetCommentsFromUrl(link);
+
             if (itemComments.Count > 0)
             {
-                s.Append($@"<p><b style=""color: #777777; font-size: smaller;"">{(itemComments.Count == 1 ? "1 kommentar:" : $"{itemComments.Count} kommentarer")}</b><br>");
-                
+                s.Append(@"<section class=""comments"" aria-label=""Kommentarer till inlägget"">
+    <h2>Kommentarer</h2>");
+
                 foreach (var c in itemComments)
                 {
-                    s.Append(c.GetHtml());
-
-                    if (c != itemComments.Last())
-                        s.Append("<br>");
+                    s.Append($@"    <article class=""comment"">
+        <p class=""comment-meta"">
+            <a href=""{System.Web.HttpUtility.HtmlEncode(c.PageUrl)}"">{System.Web.HttpUtility.HtmlEncode(c.By)}</a>
+            <time datetime=""{c.DateTimeFormat}"">{c.DateTimeDisplay}</time>
+        </p>
+    </article>");
                 }
 
-                s.Append("</p>");
+                s.Append("</section>");
             }
         }
 

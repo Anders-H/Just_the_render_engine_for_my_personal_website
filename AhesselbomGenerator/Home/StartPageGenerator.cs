@@ -52,15 +52,6 @@ public class StartPageGenerator
         <span>&nbsp;|&nbsp;</span>
         <a href=""https://filmtips.winsoft.se/"" target=""_blank"">Filmtips</a>
     </footer>
-<script>
-    const teaserGrid = document.querySelector('.container');
-    const hiddenTeaser = document.querySelector('.hide-on-two');
-
-    new ResizeObserver(() => {
-        const cols = getComputedStyle(teaserGrid).gridTemplateColumns.split(' ').length;
-        hiddenTeaser.style.display = cols === 2 ? 'none' : '';
-    }).observe(teaserGrid);
-</script>
 </body>
 </html>";
 
@@ -74,20 +65,9 @@ public class StartPageGenerator
     {
         var cards = File.ReadAllText($"{settings.InputBasePath}start_cards.txt");
 
-        var comments = Template.Replace("[items]", cards)
+        return Template.Replace("[items]", cards)
             .Replace("[today]", GetToday())
-            .Replace("[comments]", FileReader.GetTextFileContent(Path.Combine(Config.SourceDirectory, "comments.txt")));
-
-        const string searchFor = "class=\"teaser endTeaser\"";
-        const string replaceWith = "class=\"teaser endTeaser hide-on-two\"";
-
-        var sistaIndex = comments.LastIndexOf(searchFor, StringComparison.CurrentCultureIgnoreCase);
-
-        if (sistaIndex == -1)
-            return comments;
-
-        var modified = comments[..sistaIndex] + replaceWith + comments[(sistaIndex + searchFor.Length)..];
-        return modified;
+            .Replace("[comments]", FileReader.GetTextFileContent(Path.Combine(Config.SourceDirectory, "comments-home.txt")));
     }
 
     private static string GetToday() =>

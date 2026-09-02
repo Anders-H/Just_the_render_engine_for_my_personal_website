@@ -17,6 +17,12 @@ public class Comment
         By = GetCommenter(element);
     }
 
+    public string DateTimeFormat =>
+        Date;
+
+    public string DateTimeDisplay =>
+        Date;
+
     private string GetCommenter(XmlElement element)
     {
         foreach (var e in element.Cast<XmlElement>().Where(e => e.Name == "dc:creator"))

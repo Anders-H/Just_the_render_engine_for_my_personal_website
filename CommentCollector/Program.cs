@@ -9,36 +9,47 @@ var inputFiles = new List<string>
     "C:/Users/hbom/OneDrive/ahesselbom.se2/Output/rss/winsoft-comments.xml"
 };
 
-const string outputFile = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Source\comments.txt";
-
-var options = new FileStreamOptions
-{
-    Access = FileAccess.Write,
-    Mode = FileMode.Create
-};
+const string homeOutputFile = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Source\comments-home.txt";
+const string sidebarOutputFile = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Source\comments-sidebar.txt";
 
 var commentList = new List<Comment>();
 
 foreach (var inputFile in inputFiles)
     commentList.AddRange(GetComments(inputFile));
 
-var sortedComments = commentList.OrderByDescending(x => x.PublishedTime).ToList();
+var latestComments = commentList
+    .OrderByDescending(x => x.PublishedTime)
+    .Take(2)
+    .ToList();
 
-using var sw = new StreamWriter(outputFile, Encoding.UTF8, options);
-var count = 0;
-
-foreach (var comment in sortedComments)
-{
-    count++;
-    sw.WriteLine(@"<article class=""teaser endTeaser""><h3>Kommentar</h3>");
-    sw.WriteLine(comment.ToHtml());
-    sw.WriteLine("</article>");
-    
-    if (count >= 2)
-        break;
-}
+WriteHomeComments(latestComments);
+WriteSidebarComments(latestComments);
 
 return;
+
+void WriteHomeComments(IEnumerable<Comment> comments)
+{
+    using var sw = new StreamWriter(homeOutputFile, false, Encoding.UTF8);
+
+    foreach (var comment in comments)
+    {
+        sw.WriteLine(@"<article class=""teaser endTeaser""><h3>Kommentar</h3>");
+        sw.WriteLine(comment.ToHtml());
+        sw.WriteLine("</article>");
+    }
+}
+
+void WriteSidebarComments(IEnumerable<Comment> comments)
+{
+    using var sw = new StreamWriter(sidebarOutputFile, false, Encoding.UTF8);
+    sw.WriteLine(@"<section class=""comments"" aria-labelledby=""sidebar-comments-heading"">");
+    sw.WriteLine(@"    <h2 id=""sidebar-comments-heading"">Senaste kommentarer</h2>");
+
+    foreach (var comment in comments)
+        sw.WriteLine(comment.ToSidebarHtml());
+
+    sw.WriteLine("</section>");
+}
 
 IEnumerable<Comment> GetComments(string filePath)
 {
