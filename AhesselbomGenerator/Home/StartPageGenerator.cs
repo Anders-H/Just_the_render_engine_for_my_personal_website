@@ -20,7 +20,7 @@ public class StartPageGenerator
 
     <header>
         <h1>Anders Hesselbom</h1>
-        <p>Programmerare, skeptiker, sekulärhumanist, antirasist.<br/>Författare till bok om C64 och senbliven lantis. Röstar pirat.</p>
+        <p class=""home-tagline"">Programmerare, skeptiker, sekulärhumanist, antirasist.<br/>Författare till bok om C64 och senbliven lantis. Röstar pirat.</p>
     </header>
 
     <div class=""hero-image""></div>
