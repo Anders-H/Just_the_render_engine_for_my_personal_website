@@ -331,7 +331,7 @@ public class HtmlProcessor
 
     void GetLastBlogAddress(out string lastBlogAddress, out string lastBlogHeader, out string lastBlogShortText)
     {
-        const string rssFilename = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\rss.xml";
+        const string rssFilename = @"D:\OneDrive\ahesselbom.se2\Output\rss\rss.xml";
         CheckFileIsXml(rssFilename);
         var bloggGenerator = new BloggGenerator(rssFilename);
         bloggGenerator.GetLast(out lastBlogAddress, out lastBlogHeader, out lastBlogShortText);

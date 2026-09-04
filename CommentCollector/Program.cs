@@ -5,12 +5,12 @@ using CommentCollector;
 
 var inputFiles = new List<string>
 {
-    "C:/Users/hbom/OneDrive/ahesselbom.se2/Output/rss/rss_comments.xml",
-    "C:/Users/hbom/OneDrive/ahesselbom.se2/Output/rss/winsoft-comments.xml"
+    @"D:\OneDrive\ahesselbom.se2\Output\rss\rss_comments.xml",
+    @"D:\OneDrive\ahesselbom.se2\Output\rss\winsoft-comments.xml"
 };
 
-const string homeOutputFile = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Source\comments-home.txt";
-const string sidebarOutputFile = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Source\comments-sidebar.txt";
+const string homeOutputFile = @"D:\OneDrive\ahesselbom.se2\Source\comments-home.txt";
+const string sidebarOutputFile = @"D:\OneDrive\ahesselbom.se2\Source\comments-sidebar.txt";
 
 var commentList = new List<Comment>();
 

@@ -2,7 +2,7 @@
   "profiles": {
     "CompressCss": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\hbom\\OneDrive\\ahesselbom.se2\\Source\\style25.source.css\" \"‪C:\\Users\\hbom\\OneDrive\\ahesselbom.se2\\Output\\style25.css\""
+      "commandLineArgs": "\"D:\\OneDrive\\ahesselbom.se2\\Source\\style25.source.css\" \"‪D:\\OneDrive\\ahesselbom.se2\\Output\\style25.css\""
     }
   }
 }

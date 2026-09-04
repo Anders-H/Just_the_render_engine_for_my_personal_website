@@ -5,17 +5,17 @@ using System.Xml;
 
 var rssFiles = new List<FeedFile>
 {
-    new("X (Twitter)", @"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\ahesselbom_x_rss.xml", true, true),
-    new("Bloggen", @"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\rss.xml", false, false),
-    new("YouTube (Veckans Hesselbom)", @"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\veckanshesselbom_rss.xml", true, false),
-    new("Teknikbloggen", @"C:\Users\hbom\OneDrive\ahesselbom.se2\Output\rss\winsoft.xml", false, false),
-    //w("Podcast (Inte en singel)", @"C:\Users\hbom\OneDrive\InteEnSingel\Output\rss.xml", true, true),
-    new("Podcast (Blev det en klassiker?)", @"C:\Users\hbom\OneDrive\BlevDetEnKlassiker\Output\rss.xml", true, true),
-    new("YouTube (Flimmer Duo)", @"C:\Users\hbom\OneDrive\80tal\Output\feed\tag\flimmer-duo.xml", true, false)
+    new("X (Twitter)", @"D:\OneDrive\ahesselbom.se2\Output\rss\ahesselbom_x_rss.xml", true, true),
+    new("Bloggen", @"D:\OneDrive\ahesselbom.se2\Output\rss\rss.xml", false, false),
+    new("YouTube (Veckans Hesselbom)", @"D:\OneDrive\ahesselbom.se2\Output\rss\veckanshesselbom_rss.xml", true, false),
+    new("Teknikbloggen", @"D:\OneDrive\ahesselbom.se2\Output\rss\winsoft.xml", false, false),
+    //w("Podcast (Inte en singel)", @"D:\OneDrive\InteEnSingel\Output\rss.xml", true, true),
+    new("Podcast (Blev det en klassiker?)", @"D:\OneDrive\BlevDetEnKlassiker\Output\rss.xml", true, true),
+    new("YouTube (Flimmer Duo)", @"D:\OneDrive\80tal\Output\feed\tag\flimmer-duo.xml", true, false)
 };
 
-const string output = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Source\start_content.txt";
-const string outputHtml2026 = @"C:\Users\hbom\OneDrive\ahesselbom.se2\Source\start_cards.txt";
+const string output = @"D:\OneDrive\ahesselbom.se2\Source\start_content.txt";
+const string outputHtml2026 = @"D:\OneDrive\ahesselbom.se2\Source\start_cards.txt";
 var items = new List<Item>();
 
 foreach (var f in rssFiles)
